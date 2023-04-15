@@ -4,7 +4,22 @@ from . import setting
 from .camera import Camera
 import json
 
-GFX = json.load(open('resources/asset.json','r',encoding='UTF-8'))["GFX"]
+def loadAssetData(prePath,*argv):
+    order = "json.load(open('resources/asset.json','r',encoding='UTF-8'))"
+    for value in argv:
+        order = order + "[\"%s\"]" % value
+    tempDict = eval(order)
+    for loc in tempDict:
+        tempDict[loc] = prePath + tempDict[loc]
+    return tempDict
+
+GFX_UI = loadAssetData("resources/GFX/UI/","GFX","UI")
+GFX_test = loadAssetData("resources/GFX/test","GFX","UI")
+
+PG.display.set_caption("CP_P")
+PG.display.set_icon(PG.image.load(GFX_UI["icon"]))
+
+
 
 class GlobalValue:
     #设置全局变量，一共两个方法，set与get
@@ -21,12 +36,10 @@ class GlobalValue:
             return default
         
 GV = GlobalValue()
-"""global value全局变量"""
+"""global value全局变量字典"""
 
-PG.display.set_caption("CP_P")
-PG.display.set_icon(PG.image.load(GFX["icon"]))
 screen = PG.display.set_mode(setting.windowsize,setting.windowflags)
-
+"""游戏窗口"""
 
 moduleList = []
 """模组列表"""

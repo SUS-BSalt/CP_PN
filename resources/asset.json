@@ -1,5 +1,8 @@
 {
     "GFX":{
-        "icon": "resources/ONE.ico"
+        "UI":{"icon": "ONE.ico"},
+        "Scence":{},
+        "Character":{},
+        "test":{}
     }
 }

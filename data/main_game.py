@@ -39,14 +39,15 @@ class MainGame:
   
 
     def update(self):
-        while GE.GV.get("gameRun"):
+        while GE.GV.get("game_run"):
+            
             #循环本体
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓维持FPS的第一块代码↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
             self.beg_FrameTimer = time.perf_counter()
             self.fps_Rectify()
             #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑维持FPS的第一块代码↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓游戏逻辑↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-            GE.controller()
+            #GE.controller()
             #处理输入信号
             GE.camera.createDrawQuest()
             #创建绘制任务队列
@@ -70,7 +71,7 @@ class MainGame:
         """还有更新场景2023.4.7"""
         self.drawLoopclock = pygame.time.Clock()
 
-        while GE.GV.get("gameRun"):
+        while GE.GV.get("game_run"):
             #0循环本体
             self.drawLoopclock.tick(setting.drawLoopFps)
             #保持循环的fps
@@ -83,7 +84,7 @@ class MainGame:
 
     def animateLoop(self):
         self.animateLoopclock = pygame.time.Clock()
-        while GE.GV.get("gameRun"):
+        while GE.GV.get("game_run"):
             self.animateLoopclock.tick(setting.animateLoopFps)
             for module in GE.moduleList:
                 module.animate()
@@ -110,7 +111,7 @@ class MainGame:
                  self.fps_Span_Rectify += self.fps_Span_Rectify_var
                  print(self.fps_Span_Rectify)
             #print(tiemGap)
-            #print(round(1/(self.fps_Span_Rectify_TimeGap)*self.fps_Rectify_Frequency),"FPS")
+            print(round(1/(self.fps_Span_Rectify_TimeGap)*self.fps_Rectify_Frequency),"FPS")
             #print(pygame.time.get_ticks())
             self.fps_Span_Rectify_Timer = self.beg_FrameTimer
             self.fps_Rectify_Timer = 0

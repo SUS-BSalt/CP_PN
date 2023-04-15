@@ -44,14 +44,24 @@ class Camera:
         self.draw_List_Creating = []
 
     def getMousePos(self):
-        mousePosX = (pygame.mouse.get_pos()[0] + self.loc[0] - self.cameraLocRectify[0])/self.cameraScaleIndex
-        mousePosY = (pygame.mouse.get_pos()[1] + self.loc[1] - self.cameraLocRectify[1])/self.cameraScaleIndex
+        mousePosX = (pygame.mouse.get_pos()[0] - self.cameraLocRectify[0])/self.cameraScaleIndex + self.loc[0]
+        mousePosY = (pygame.mouse.get_pos()[1] - self.cameraLocRectify[1])/self.cameraScaleIndex + self.loc[1]
         self.mousePos = (mousePosX, mousePosY)
         return(mousePosX, mousePosY)
     
     def mousePosCheck(self,rect):
-        if self.mousePos[0] > rect[0] and self.mousePos[1] > rect[1] \
-        and self.mousePos[0] < rect[0]+rect[2] and self.mousePos[1] < rect[1]+rect[3]:
+        if  self.mousePos[0] > rect[0] and \
+            self.mousePos[1] > rect[1] and \
+            self.mousePos[0] < rect[0]+rect[2] and \
+            self.mousePos[1] < rect[1]+rect[3]:
+            return True
+        else:
+            return False
+    def mousePosCheck_UI(self,rect):
+        if  self.mousePos[0] - self.loc[0] > rect[0] and \
+            self.mousePos[1] - self.loc[1] > rect[1] and \
+            self.mousePos[0] - self.loc[0] < rect[0]+rect[2] and \
+            self.mousePos[1] - self.loc[1] < rect[1]+rect[3]:
             return True
         else:
             return False

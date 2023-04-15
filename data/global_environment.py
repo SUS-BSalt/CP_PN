@@ -19,8 +19,6 @@ GFX_test = loadAssetData("resources/GFX/test","GFX","UI")
 PG.display.set_caption("CP_P")
 PG.display.set_icon(PG.image.load(GFX_UI["icon"]))
 
-
-
 class GlobalValue:
     #设置全局变量，一共两个方法，set与get
     def __init__(self):
@@ -49,3 +47,9 @@ controller = 0
 
 camera = Camera()
 """摄像机，包括了绘制任务的创建与执行，获取鼠标位置，跟随窗口大小调整画面等功能"""
+
+UIfont_01 = PG.font.Font(setting.charType,40)
+UIfont_02 = PG.font.Font(textSettings.charType,50)
+UIfont_03 = PG.font.Font(textSettings.charType,30)
+UIfont_04 = PG.font.Font(textSettings.charType,20)
+UIfont_05 = PG.font.Font(textSettings.charType,40)

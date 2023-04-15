@@ -9,8 +9,12 @@ class Camera:
         self.cameraShot = pygame.Surface(self.size)
 
         self.draw_List_Creating = []
+        """正在创建中的绘制任务"""
         self.draw_List_Ready = []
-        self.draw_List_Drawing = ()
+        """创建好的绘制任务"""
+        self.draw_List_Drawing = []
+        """执行中的绘制任务"""
+        #如果可以的话，应该把这三个列表各自对齐内存块头部，以提高cache命中率
 
         self.cameraLocRectify = [0,0]
         self.cameraScaleIndex = setting.windowsize[0] / setting.org_windowsize[0]
@@ -29,10 +33,15 @@ class Camera:
     def draw_UI(self,vision,loc):
         self.draw_List_Creating.append((vision,loc))
 
-    def blit(self):
+    def executeDrawQuest(self):
+        """执行绘制任务"""
         self.draw_List_Drawing = self.draw_List_Ready
-        for i in self.draw_List_Drawing:
-            self.cameraShot.blits(self.draw_List_Drawing,False)
+        self.cameraShot.blits(self.draw_List_Drawing,False)
+
+    def createDrawQuest(self):
+        """创建绘制任务的同时，将现有的绘制任务状态切换为预备中"""
+        self.draw_List_Ready = self.draw_List_Creating
+        self.draw_List_Creating = []
 
     def getMousePos(self):
         mousePosX = (pygame.mouse.get_pos()[0] + self.loc[0] - self.cameraLocRectify[0])/self.cameraScaleIndex

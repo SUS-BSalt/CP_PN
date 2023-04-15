@@ -36,10 +36,9 @@ class MainGame:
         #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓update相关变量（开关）↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
         self.OBJ_updating = False
         self.OBJ_drawing = False
+  
 
-
-    
-    def logicLoop(self):
+    def update(self):
         while GE.GV.get("gameRun"):
             #循环本体
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓维持FPS的第一块代码↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -49,9 +48,11 @@ class MainGame:
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓游戏逻辑↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
             GE.controller()
             #处理输入信号
+            GE.camera.createDrawQuest()
+            #创建绘制任务队列
             for module in GE.moduleList:
                 if module.activeSituation == True:
-                    module.act()
+                    module.update()
             #更新游戏
             #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑游戏逻辑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓维持FPS的第二块代码↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -63,6 +64,7 @@ class MainGame:
             time.sleep(self.fps_Span_Rectify - self.differ_FrameTimer)
             #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑维持FPS的第二块代码↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
+
     def drawLoop(self):
         """#画面循环，基本只负责绘制可见对象"""
         """还有更新场景2023.4.7"""
@@ -72,23 +74,20 @@ class MainGame:
             #0循环本体
             self.drawLoopclock.tick(setting.drawLoopFps)
             #保持循环的fps
-            while self.OBJ_updating:
-                pass
-            GE.camera.blit()
-            GE.screen.blit(pygame.transform.scale(GE.camera.cameraShot,GE.settings.windowsize),GE.camera.cameraLocRectify)
+            GE.camera.executeDrawQuest()#执行绘制任务
+            GE.screen.blit(pygame.transform.scale(GE.camera.cameraShot,setting.windowsize),GE.camera.cameraLocRectify)
             #将画面缩放到窗口大小
-
             pygame.display.update()
             #更新画面
-
 
 
     def animateLoop(self):
         self.animateLoopclock = pygame.time.Clock()
         while GE.GV.get("gameRun"):
-            self.animateLoopclock.tick(GE.settings.animateLoopFps)
+            self.animateLoopclock.tick(setting.animateLoopFps)
             for module in GE.moduleList:
                 module.animate()
+
 
     def fps_Rectify(self):
         """修正每帧休眠的时间，以尽可能的减少fps波动，这个维持fps的方法的前提是，电脑性能比游戏所需性能好。"""
@@ -124,4 +123,4 @@ class MainGame:
         self.thread_animateLoop = threading.Thread(target = self.animateLoop)
         self.thread_animateLoop.start()
         
-        self.logicLoop()
+        self.update()

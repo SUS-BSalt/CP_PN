@@ -1,6 +1,8 @@
 {
     "GFX":{
-        "UI":{"icon": "ONE.ico"},
+        "UI":{"icon": "ONE.ico",
+                "StartMenu":"StartMenu.png"
+            },
         "Scence":{},
         "Character":{},
         "test":{}

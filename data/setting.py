@@ -9,4 +9,4 @@ windowflags = (pygame.RESIZABLE)#可调节窗口大小的模式
 
 START = "开始";LOAD = "载入";OPTION = "设置";QUIT = "退出"
 
-charType = "source/font/bb4171.ttf"
+charType = "resources/Font/bb4171.ttf"

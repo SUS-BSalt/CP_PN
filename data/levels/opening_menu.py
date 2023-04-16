@@ -1,6 +1,6 @@
-import global_environment as GE
-from objects import UIObj
-import setting
+from data import global_environment as GE
+from data.objects import UIObj
+from data import setting
 import pygame as PG
 
 class Manager_OpeningMenu:
@@ -13,21 +13,20 @@ class Manager_OpeningMenu:
     def update(self):
         for checker in self.followingEventList:
             checker()
-    def draw(self):
-        pass
     def animate(self):
         pass
 
     def start(self):
-        self.OpeningMenu = create_OpingMenu()
+        self.openingMenu = create_OpingMenu()
+        GE.moduleList.append(self.openingMenu)
+        self.openingMenu.activeSituation = True
+        GE.controller = self.openingMenu.controller
 
 def create_OpingMenu():
     openingMenu = UIObj.UIModule()
-    GE.moduleList.append(openingMenu)
-    
     #开始菜单
     startMenu = UIObj.Menu(activeSituation=True, size=[1280,720])
-    startMenu.vision = PG.image.load("Source/UI/StartMenu.png")
+    startMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
     openingMenu.menuList.append(startMenu)
     openingMenu.activeMenu = startMenu
 
@@ -68,7 +67,8 @@ def create_OpingMenu():
         return 0
     #确认退出菜单
     confirmMenu = UIObj.Menu(activeSituation=False)
-    confirmMenu.vision = PG.image.load("Source/UI/StartMenu.png")
+    confirmMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+    confirmMenu.masterMenu = startMenu
     openingMenu.menuList.append(confirmMenu)
 
     confirmMenu.appendButtonToMenu(exitMethod,[500,350],[100,50],
@@ -89,7 +89,8 @@ def create_OpingMenu():
     #载入菜单
     loadMenu = UIObj.Menu(activeSituation=False)
     openingMenu.menuList.append(loadMenu)
-    loadMenu.vision = PG.image.load("Source/UI/StartMenu.png")
+    loadMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+    loadMenu.masterMenu = startMenu
     loadMenu.appendButtonToMenu(backToStartMenuMethod,[100,600],[100,50],
                                         GE.UIfont_01.render("返回",False,(0,0,0)),
                                         GE.UIfont_02.render("返回",False,(0,0,0)),
@@ -99,9 +100,15 @@ def create_OpingMenu():
     #设置菜单
     optionMenu = UIObj.Menu(activeSituation=False)
     openingMenu.menuList.append(loadMenu)
+    optionMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+    optionMenu.masterMenu = startMenu
     optionMenu.appendButtonToMenu(backToStartMenuMethod,[100,600],[100,50],
                                         GE.UIfont_01.render("返回",False,(0,0,0)),
                                         GE.UIfont_02.render("返回",False,(0,0,0)),
                                     )
     #设置菜单#
-    
+    return openingMenu
+
+manager = Manager_OpeningMenu()
+GE.moduleList.append(manager)
+manager.start()

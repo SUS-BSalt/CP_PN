@@ -36,6 +36,7 @@ class Camera:
     def executeDrawQuest(self):
         """执行绘制任务"""
         self.draw_List_Drawing = self.draw_List_Ready
+        #self.cameraShot.blits(self.draw_List_Drawing,False)
         self.cameraShot.blits(self.draw_List_Drawing,False)
 
     def createDrawQuest(self):

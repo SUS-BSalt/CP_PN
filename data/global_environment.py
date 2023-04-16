@@ -1,7 +1,7 @@
 __name__ = "全局环境"
 import pygame as PG
-from . import setting
-from .camera import Camera
+from data import setting
+from data.camera import Camera
 import json
 
 def loadAssetData(prePath,*argv):
@@ -49,7 +49,7 @@ camera = Camera()
 """摄像机，包括了绘制任务的创建与执行，获取鼠标位置，跟随窗口大小调整画面等功能"""
 
 UIfont_01 = PG.font.Font(setting.charType,40)
-UIfont_02 = PG.font.Font(textSettings.charType,50)
-UIfont_03 = PG.font.Font(textSettings.charType,30)
-UIfont_04 = PG.font.Font(textSettings.charType,20)
-UIfont_05 = PG.font.Font(textSettings.charType,40)
+UIfont_02 = PG.font.Font(setting.charType,50)
+UIfont_03 = PG.font.Font(setting.charType,30)
+UIfont_04 = PG.font.Font(setting.charType,20)
+UIfont_05 = PG.font.Font(setting.charType,40)

@@ -1,5 +1,5 @@
 import pygame as PG
-import global_environment as GE
+from data import global_environment as GE
 
 class UIModule:
     def __init__(self):
@@ -9,6 +9,7 @@ class UIModule:
 
     def controller(self):
         GE.GV.set("click",False)
+        GE.GV.set("escape",False)
         GE.camera.getMousePos()
         for event in PG.event.get():            
             if event.type == PG.KEYUP:
@@ -27,6 +28,9 @@ class UIModule:
 
     def update(self):
         self.activeMenu.update()
+        if GE.GV.get("escape",True) and self.activeMenu.masterMenu != None:
+            self.activeMenu = self.activeMenu.masterMenu
+
 
     def animate(self):
         self.activeMenu.animate()
@@ -44,13 +48,15 @@ class Menu:
         
 
     def update(self):
+        GE.camera.draw_UI(self.vision,self.loc)
         for button in self.buttonList:
             if GE.GV.get('click'):
                 if GE.camera.mousePosCheck_UI(button.rect) == True:
                     button.exec()
                     GE.GV.set('click', False)
             GE.camera.draw_UI(button.vision,button.loc)
-        GE.camera.draw_UI(self.vision,self.loc)
+
+        
         
 
     def animate(self):
@@ -87,5 +93,7 @@ class Button:
     def mouseActiveMethond(self,situation):
         if situation:
             self.vision = self.frameList[1]
+            self.mouseActive = True
         else:
             self.vision = self.frameList[0]
+            self.mouseActive = False

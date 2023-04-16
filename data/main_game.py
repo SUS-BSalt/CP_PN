@@ -1,8 +1,8 @@
 import pygame
 import threading
 import time
-from . import setting
-from . import global_environment as GE
+from data import setting
+from data import global_environment as GE
 
 class MainGame:
     def __init__(self):
@@ -44,10 +44,9 @@ class MainGame:
             #循环本体
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓维持FPS的第一块代码↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
             self.beg_FrameTimer = time.perf_counter()
-            self.fps_Rectify()
             #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑维持FPS的第一块代码↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓游戏逻辑↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-            #GE.controller()
+            GE.controller()
             #处理输入信号
             GE.camera.createDrawQuest()
             #创建绘制任务队列
@@ -62,6 +61,7 @@ class MainGame:
             if self.differ_FrameTimer > self.fps_Span_Rectify:
                 print("Low!")
                 continue
+            self.fps_Rectify()
             time.sleep(self.fps_Span_Rectify - self.differ_FrameTimer)
             #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑维持FPS的第二块代码↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -97,22 +97,22 @@ class MainGame:
             self.fps_Span_Rectify_TimeGap = self.beg_FrameTimer - self.fps_Span_Rectify_Timer
             if   self.fps_Span_Rectify_TimeGap > (self.fps_Rectify_TimeCell*1.1):
                  self.fps_Span_Rectify -= (self.fps_Span_Rectify_var*10)
-                 print(self.fps_Span_Rectify)
+                 #print(self.fps_Span_Rectify)
 
             elif self.fps_Span_Rectify_TimeGap > (self.fps_Rectify_TimeCell*1.01):
                  self.fps_Span_Rectify -= self.fps_Span_Rectify_var
-                 print(self.fps_Span_Rectify)
+                 #print(self.fps_Span_Rectify)
     
             elif self.fps_Span_Rectify_TimeGap < (self.fps_Rectify_TimeCell*0.9):
                  self.fps_Span_Rectify += (self.fps_Span_Rectify_var*10)
-                 print(self.fps_Span_Rectify)
+                 #print(self.fps_Span_Rectify)
 
             elif self.fps_Span_Rectify_TimeGap <  (self.fps_Rectify_TimeCell*0.99):
                  self.fps_Span_Rectify += self.fps_Span_Rectify_var
-                 print(self.fps_Span_Rectify)
+                 #print(self.fps_Span_Rectify)
             #print(tiemGap)
             print(round(1/(self.fps_Span_Rectify_TimeGap)*self.fps_Rectify_Frequency),"FPS")
-            #print(pygame.time.get_ticks())
+            #print(self.differ_FrameTimer)
             self.fps_Span_Rectify_Timer = self.beg_FrameTimer
             self.fps_Rectify_Timer = 0
 

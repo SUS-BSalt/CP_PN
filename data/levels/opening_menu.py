@@ -39,9 +39,10 @@ def create_OpingMenu():
     openingMenu.activeMenu = startMenu
 
     def startMethod():
-        openingMenu.menuList.clear()
+        global manager
+        del manager
         from data.levels import Level_0
-        
+
     startMenu.appendButtonToMenu(startMethod,[100,150],[100,50],
                                     GE.UIfont_01.render(setting.START,False,(0,0,0)),
                                     GE.UIfont_02.render(setting.START,False,(0,0,0))

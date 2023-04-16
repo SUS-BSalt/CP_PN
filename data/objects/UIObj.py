@@ -31,7 +31,6 @@ class UIModule:
         if GE.GV.get("escape",True) and self.activeMenu.masterMenu != None:
             self.activeMenu = self.activeMenu.masterMenu
 
-
     def animate(self):
         self.activeMenu.animate()
 

@@ -13,6 +13,7 @@ def loadAssetData(prePath,*argv):
         tempDict[loc] = prePath + tempDict[loc]
     return tempDict
 
+#载入资产的位置信息，方便需要时直接读取
 GFX_UI = loadAssetData("resources/GFX/UI/","GFX","UI")
 GFX_test = loadAssetData("resources/GFX/test","GFX","UI")
 
@@ -39,8 +40,9 @@ GV = GlobalValue()
 screen = PG.display.set_mode(setting.windowsize,setting.windowflags)
 """游戏窗口"""
 
-moduleList = []
-"""模组列表"""
+
+eventList = []
+"""全局事件"""
 
 controller = 0
 """控制器"""
@@ -53,3 +55,13 @@ UIfont_02 = PG.font.Font(setting.charType,50)
 UIfont_03 = PG.font.Font(setting.charType,30)
 UIfont_04 = PG.font.Font(setting.charType,20)
 UIfont_05 = PG.font.Font(setting.charType,40)
+"""一些预设字体"""
+
+manager = None
+"""当前程序的管理者"""
+
+level_manager = None
+"""关卡的管理"""
+
+escMenu = None
+"""按esc会跳出来的菜单"""

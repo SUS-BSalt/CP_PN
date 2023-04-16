@@ -2,6 +2,7 @@ from data import global_environment as GE
 from data.objects import UIObj
 from data import setting
 import pygame as PG
+import os,sys
 
 class Manager_OpeningMenu:
     def __init__(self):
@@ -9,16 +10,23 @@ class Manager_OpeningMenu:
         self.internalEventList = []
         self.globalEventList = []
         self.followingEventList = []
+        self.moduleList = []
     
     def update(self):
         for checker in self.followingEventList:
             checker()
+        for module in self.moduleList:
+                if module.activeSituation == True:
+                    module.update()
     def animate(self):
+        for module in self.moduleList:
+                if module.activeSituation == True:
+                    module.animate()
         pass
 
     def start(self):
         self.openingMenu = create_OpingMenu()
-        GE.moduleList.append(self.openingMenu)
+        self.moduleList.append(self.openingMenu)
         self.openingMenu.activeSituation = True
         GE.controller = self.openingMenu.controller
 
@@ -32,9 +40,8 @@ def create_OpingMenu():
 
     def startMethod():
         openingMenu.menuList.clear()
-        import Levels.escMenu
-        import Levels.level_0
-        GE.moduleList.remove(openingMenu)
+        from data.levels import Level_0
+        
     startMenu.appendButtonToMenu(startMethod,[100,150],[100,50],
                                     GE.UIfont_01.render(setting.START,False,(0,0,0)),
                                     GE.UIfont_02.render(setting.START,False,(0,0,0))
@@ -110,5 +117,36 @@ def create_OpingMenu():
     return openingMenu
 
 manager = Manager_OpeningMenu()
-GE.moduleList.append(manager)
+GE.manager = manager
+GE.level_manager = manager
 manager.start()
+
+
+escMenuModule = UIObj.UIModule()
+GE.escMenu = escMenuModule
+
+#esc菜单
+escMenu = UIObj.Menu(activeSituation=True, size=[1280,720])
+escMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+
+def backMethod():
+    GE.controller = GE.level_manager.controller
+    GE.level_manager.activeSituation = True
+    GE.manager = GE.level_manager
+
+escMenu.appendButtonToMenu(backMethod,[100,450],[150,80],
+                                    GE.UIfont_01.render("返回游戏",False,(0,0,0)),
+                                    GE.UIfont_02.render("返回游戏",False,(0,0,0))
+                                )
+
+def backToOpeningMenu():
+    #@Todo保存游戏
+    GE.GV.set("gameRun",False)
+    os.execl(sys.executable,sys.executable,"./main.py")
+    
+escMenu.appendButtonToMenu(backToOpeningMenu,[100,600],[150,80],
+                                    GE.UIfont_01.render("返回主菜单",False,(0,0,0)),
+                                    GE.UIfont_02.render("返回主菜单",False,(0,0,0))
+                                )
+    
+escMenuModule.menuList.append(escMenu)

@@ -50,9 +50,7 @@ class MainGame:
             #处理输入信号
             GE.camera.createDrawQuest()
             #创建绘制任务队列
-            for module in GE.moduleList:
-                if module.activeSituation == True:
-                    module.update()
+            GE.manager.update()
             #更新游戏
             #↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑游戏逻辑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
             #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓维持FPS的第二块代码↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -86,8 +84,7 @@ class MainGame:
         self.animateLoopclock = pygame.time.Clock()
         while GE.GV.get("game_run"):
             self.animateLoopclock.tick(setting.animateLoopFps)
-            for module in GE.moduleList:
-                module.animate()
+            GE.manager.animate()
 
 
     def fps_Rectify(self):

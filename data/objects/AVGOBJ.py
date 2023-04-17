@@ -204,6 +204,7 @@ class AVGModule:
             self.clickSwitch = False
             self.sleepSwitch = False
 
+        GE.camera.draw(GE.camera.white,(0,0))
         GE.camera.draw(self.textBox.vision, self.textBox.loc)
         for character in self.onStageCharacterList:
             character.draw()
@@ -321,6 +322,7 @@ class Reader:
                 self.master.characterDict[self.textEffect[6:]].setExpression(int(self.textEffect[4:6]))
             case _ if self.textEffect[:6] == 'appear':
                 self.master.characterDict[self.textEffect[6:]].onStage = True
+                self.master.
             case _ if self.textEffect[:5] == 'leave':
                 self.master.characterDict[self.textEffect[5:]].onStage = False
 

@@ -1,8 +1,14 @@
 from data import global_environment as GE
+from data.objects import AVGOBJ
+import pygame
+
+def appendFrame(obj,num,source):
+    for i in range(num):
+        address = source+'%d'%(i+1)+'.png'
+        obj.frameList.append(pygame.image.load(address).convert_alpha())
 
 
-
-class Manage_Level_0:
+class Manager_Level_0:
     def __init__(self):
         self.activeSituation = True
         self.internalEventList = []
@@ -25,9 +31,9 @@ class Manage_Level_0:
     def start(self):
         #self.ACTModule = createACTModule()
         self.AVGModule = createAVGModule()
-
         self.followingEventList.append(self.check_0)
-        print(GE.moduleList)
+        self.moduleList.append(self.AVGModule)
+        print(self.moduleList)
 
     def check_0(self):
         for event in GE.eventList:
@@ -67,33 +73,33 @@ class Manage_Level_0:
 
 def createAVGModule():
     #（创建模块）
-    module_AVG = AVGObjects.AVGModule(open('books/level_0.txt','r',encoding='UTF-8'))
+    module_AVG = AVGOBJ.AVGModule(open('data/levels/books/level_0.txt','r',encoding='UTF-8'))
     GE.controller = module_AVG.controller
     module_AVG.clickArea = [0,470,800,300]
     module_AVG.activeSituation = True
     module_AVG.workingSituation = True
     #（创建模块）
     #（创建textBox）
-    module_AVG.textBox = AVGObjects.TextBox(loc=[0,470], size=[800,300])
-    module_AVG.textBox.frameList.append(pygame.image.load('source/test/testarea_02.png'))
+    module_AVG.textBox = AVGOBJ.TextBox(loc=[0,470], size=[800,300])
+    module_AVG.textBox.frameList.append(pygame.image.load('resources/GFX/test/testarea_02.png').convert())
     module_AVG.textBox.init()
     #（创建textBox）
     #(创建logsBox)
-    module_AVG.logsBox = AVGObjects.LogsBox(loc=[0,0], size=[800,770], textBoxHeight=300)
-    module_AVG.logsBox.backGroundVision = pygame.image.load('source/UI/logs.png')
+    module_AVG.logsBox = AVGOBJ.LogsBox(loc=[0,0], size=[800,770], textBoxHeight=300)
+    module_AVG.logsBox.backGroundVision = pygame.image.load(GE.GFX_UI["Logs"]).convert()
     #(创建logsBox)
     #（人物）
-    satmic = AVGObjects.Character(size=[150,200],loc=[600,70],color = (200,200,200))
+    satmic = AVGOBJ.Character(size=[150,200],loc=[600,70],color = (200,200,200))
     #（表情1）
-    expressions = AVGObjects.Expression()
+    expressions = AVGOBJ.Expression()
 
-    expressions.body = pygame.image.load('Source/character/Satmic/body.png')
+    expressions.body = pygame.image.load('resources/GFX/Character/Satmic/body.png')
 
-    expressions.eyes = AVGObjects.Eye(loc=[72,51])
-    appendFrame(expressions.eyes,3,"Source/character/Satmic/eye/")
+    expressions.eyes = AVGOBJ.Eye(loc=[72,51])
+    appendFrame(expressions.eyes,3,"resources/GFX/Character/Satmic/eye/")
 
-    expressions.mouth = AVGObjects.Mouth(loc=[88,89])
-    appendFrame(expressions.mouth,4,"Source/character/Satmic/mouth/")
+    expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
+    appendFrame(expressions.mouth,4,"resources/GFX/Character/Satmic/mouth/")
 
     satmic.expressionList.append(expressions)
     #（表情1）
@@ -104,67 +110,69 @@ def createAVGModule():
     #（人物）
 
     #（人物）
-    Azure = AVGObjects.Character(size=[150,200],loc=[700,270],color = (200,200,200))
+    Nacy = AVGOBJ.Character(size=[150,200],loc=[700,270],color = (200,200,200))
     #（表情1）
-    expressions = AVGObjects.Expression()
+    expressions = AVGOBJ.Expression()
 
-    expressions.body = pygame.image.load('Source/character/Azure/blank/body.jpg')
+    expressions.body = pygame.image.load('resources/GFX/Character/Nacy/blank/body.jpg')
 
-    expressions.eyes = AVGObjects.Eye(loc=[72,51])
-    expressions.eyes.frameList.append(pygame.image.load("./Source/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("Source/test/transparent.png"))
+    expressions.eyes = AVGOBJ.Eye(loc=[72,51])
+    expressions.eyes.frameList.append(pygame.image.load("./resources/GFX/test/transparent.png"))
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
 
-    expressions.mouth = AVGObjects.Mouth(loc=[88,89])
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
+    expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
 
-    Azure.expressionList.append(expressions)
+    Nacy.expressionList.append(expressions)
     #（表情1）
     #（表情2）
-    expressions = AVGObjects.Expression()
+    expressions = AVGOBJ.Expression()
 
-    expressions.body = pygame.image.load('Source/character/Azure/angry/body.jpg')
+    expressions.body = pygame.image.load('resources/GFX/Character/Nacy/angry/body.jpg')
 
-    expressions.eyes = AVGObjects.Eye(loc=[72,51])
-    expressions.eyes.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("Source/test/transparent.png"))
+    expressions.eyes = AVGOBJ.Eye(loc=[72,51])
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
 
-    expressions.mouth = AVGObjects.Mouth(loc=[88,89])
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
+    expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
 
-    Azure.expressionList.append(expressions)
+    Nacy.expressionList.append(expressions)
     #（表情2）
     #（表情3）
-    expressions = AVGObjects.Expression()
+    expressions = AVGOBJ.Expression()
 
-    expressions.body = pygame.image.load('Source/character/Azure/cute/body.jpg')
+    expressions.body = pygame.image.load('resources/GFX/Character/Nacy/cute/body.jpg')
 
-    expressions.eyes = AVGObjects.Eye(loc=[72,51])
-    expressions.eyes.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("Source/test/transparent.png"))
+    expressions.eyes = AVGOBJ.Eye(loc=[72,51])
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
 
-    expressions.mouth = AVGObjects.Mouth(loc=[88,89])
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("Source/test/transparent.png"))
+    expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
 
-    Azure.expressionList.append(expressions)
+    Nacy.expressionList.append(expressions)
     #（表情3）
-    Azure.init()
-    Azure.setExpression(0)
+    Nacy.init()
+    Nacy.setExpression(0)
 
-    module_AVG.characterDict["Azure"] = Azure
+    module_AVG.characterDict["Nacy"] = Nacy
     #（人物）
-
-    GE.moduleList.append(module_AVG)
-
     return module_AVG
+
+manager = Manager_Level_0()
+GE.manager = manager
+GE.level_manager = manager
+manager.start()

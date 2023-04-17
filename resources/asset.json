@@ -1,10 +1,26 @@
 {
     "GFX":{
-        "UI":{"icon": "ONE.ico",
-                "StartMenu":"StartMenu.png"
-            },
-        "Scence":{},
-        "Character":{},
+        "UI":   {   
+                    "icon": "ONE.ico",
+                    "StartMenu":"StartMenu.png",
+                    "Logs":"Logs.png"
+                },
+        "Scence":{
+                    "level_0":"level_0"
+        },
+        "Character":{
+                    "Nacy":{
+                        "act_Attack":"act_Attack",
+                        "act_Standing":"act_Standing",
+                        "act_Walking":"act_Walking",
+                        "angry":"angry",
+                        "blank":"blank",
+                        "confidence":"confidence",
+                        "cute":"cute",
+                        "detest":"detest",
+                        "smile":"smile"
+                    }
+                    },
         "test":{}
     }
 }

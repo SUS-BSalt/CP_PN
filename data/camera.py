@@ -7,6 +7,8 @@ class Camera:
         self.loc = [0,0]
         self.size = [1280,720]
         self.cameraShot = pygame.Surface(self.size)
+        self.white = pygame.Surface(self.size)
+        self.white.fill((255,255,255))
 
         self.draw_List_Creating = []
         """正在创建中的绘制任务"""

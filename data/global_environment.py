@@ -37,7 +37,7 @@ class GlobalValue:
 GV = GlobalValue()
 """global value全局变量字典"""
 
-screen = PG.display.set_mode(setting.windowsize,setting.windowflags)
+screen = PG.display.set_mode(setting.windowsize,setting.windowflags,16)
 """游戏窗口"""
 
 

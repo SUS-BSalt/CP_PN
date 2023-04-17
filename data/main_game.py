@@ -8,7 +8,7 @@ class MainGame:
     def __init__(self):
         GE.GV.set("game_run",True)
         #↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓fps相关变量与计时器↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-        self.fps_Rectify_Frequency = 50
+        self.fps_Rectify_Frequency = 64
         """每多少帧修正一次"""
         self.fps_Rectify_TimeCell = self.fps_Rectify_Frequency/setting.logicLoopFps
         """每两次修正之间的理想间隔时长"""

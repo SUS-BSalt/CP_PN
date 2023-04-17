@@ -37,7 +37,7 @@ class AVGModule:
 
         self.reader = Reader(self)
 
-        self.printSpeed = GE.settings.printSpeed*GE.settings.logicLoopFps
+        self.printSpeed = setting.printSpeed*setting.logicLoopFps
         """打印速度"""
         
         self.timer = 0
@@ -57,14 +57,12 @@ class AVGModule:
                         #开始skip
                         self.skipSwitch = True
                     case "escape":
-                        GE.controller = GE.escMenuModule.controller
-                        GE.tempCupForModule = self
-                        GE.escMenuModule.activeSituation = True
-                        GE.moduleList.append(GE.escMenuModule)                      
+                        GE.controller = GE.escMenu.controller
+                        GE.manager = GE.escMenu                   
 
             elif event.type == pygame.KEYUP:
                 match pygame.key.name(event.key):
-                    case GE.keyboardSettings.skip:
+                    case setting.skip:
                         #停止skip
                         self.skipSwitch = False
                         pass
@@ -73,7 +71,7 @@ class AVGModule:
                         self.clickSwitch = True
                         pass
 
-                    case GE.keyboardSettings.autoPlay:
+                    case setting.autoPlay:
                         if self.autoPlaySwitch:
                             self.autoPlaySwitch = False
                         else:
@@ -115,7 +113,7 @@ class AVGModule:
                     return
                 #如果鼠标不在检测区域内，停止函数
             elif event.type == pygame.QUIT:
-                GE.sysSymbol.set('gameRun',False)
+                GE.GV.set('gameRun',False)
 
             elif event.type == pygame.WINDOWRESIZED:
                 #变化windowsize

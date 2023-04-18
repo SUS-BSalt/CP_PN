@@ -2,7 +2,8 @@ from data import global_environment as GE
 from data.objects import AVGOBJ
 import pygame
 
-def appendFrame(obj,num,source):
+def getFrames(num,source):
+    temp = []
     for i in range(num):
         address = source+'%d'%(i+1)+'.png'
         obj.frameList.append(pygame.image.load(address).convert_alpha())
@@ -91,11 +92,9 @@ def createAVGModule():
     #（人物）
     satmic = AVGOBJ.Character(size=[150,200],loc=[600,70],color = (200,200,200))
     #（表情1）
-    expressions = AVGOBJ.Expression()
+    expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Satmic/body.png'))
 
-    expressions.body = pygame.image.load('resources/GFX/Character/Satmic/body.png')
-
-    expressions.eyes = AVGOBJ.Eye(loc=[72,51])
+    expressions.eyeSetting([72,51],3,)
     appendFrame(expressions.eyes,3,"resources/GFX/Character/Satmic/eye/")
 
     expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
@@ -114,18 +113,18 @@ def createAVGModule():
     #（表情1）
     expressions = AVGOBJ.Expression()
 
-    expressions.body = pygame.image.load('resources/GFX/Character/Nacy/blank/body.jpg')
+    expressions.body = pygame.image.load('resources/GFX/Character/Nacy/blank/body.jpg').convert_alpha()
 
     expressions.eyes = AVGOBJ.Eye(loc=[72,51])
-    expressions.eyes.frameList.append(pygame.image.load("./resources/GFX/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
+    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
 
     expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
+    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
 
     Nacy.expressionList.append(expressions)
     #（表情1）

@@ -321,10 +321,9 @@ class Reader:
             case _ if self.textEffect[:4] == 'face':
                 self.master.characterDict[self.textEffect[6:]].setExpression(int(self.textEffect[4:6]))
             case _ if self.textEffect[:6] == 'appear':
-                self.master.characterDict[self.textEffect[6:]].onStage = True
-                self.master.
+                self.master.onStageCharacterList.append(self.master.characterDict[self.textEffect[6:]])
             case _ if self.textEffect[:5] == 'leave':
-                self.master.characterDict[self.textEffect[5:]].onStage = False
+                self.master.onStageCharacterList.remove(self.master.characterDict[self.textEffect[6:]])
 
             case 'END':
                 self.master.eventList.append("END")
@@ -448,25 +447,23 @@ class Character:
     def __init__(self, loc = [0,0], size = [0,0], color = (255,255,255)):
         self.activeSituation = False
 
-        self.onStage = False
-
         self.loc = loc
         self.size = size
         
         self.color = color
 
-        self.expressionList = []
+        self.expressionDict = {}
         self.currentExpression = None
         #表情列表与当前的表情
 
     
     def init(self):
         self.activeSituation = False
-        for expression in self.expressionList:
-            expression.init()
+        for expression in self.expressionDict:
+            self.expressionDict[expression].init()
 
     def setExpression(self, expression):
-        self.currentExpression = self.expressionList[expression]
+        self.currentExpression = self.expressionDict[expression]
         
     def draw(self):
         GE.camera.draw(self.currentExpression.vision,self.loc)
@@ -486,11 +483,15 @@ class Character:
 
 class Expression:
     """你需要给body给予一张图片，并赋予eyes与mouth对象"""
-    def __init__(self):
+    def __init__(self,body):
         self.vision = None
-        self.mouth = None
-        self.eyes = None
-        self.body = None
+        self.body = body
+
+    def eyeSetting(self,loc = [0,0], eyesBlinkGap = 3, frameList = ()):
+        self.eyes = Eye(loc, eyesBlinkGap, frameList)
+
+    def mouthSetting(self,loc = [0,0], frameList = ()):
+        self.mouth = Mouth(loc, frameList)
 
     def init(self):
         self.vision = self.body.copy()
@@ -509,19 +510,18 @@ class Expression:
 
 
 class Eye:
-    def __init__(self, loc = [0,0], size = [10,10], eyesBlinkGap = 3):
+    def __init__(self, loc, eyesBlinkGap, frameList):
         self.loc = loc
-
         self.currentEye = 0
 
         self.BlinkGap = eyesBlinkGap * setting.animateLoopFps
         self.BlinkGapTimer = 0
         self.blinkTimer = 0
 
-        self.vision = pygame.Surface(size)
-        self.frameList = [] 
+        self.vision = None
+        self.frameList = frameList
         self.timeStampList = [40,41,44,46]
-        self.frameList = [0,1,2,1]
+        self.framePlayList = [0,1,2,1]
     def init(self):
         self.blinkTimer = 0
         self.currentFrame = 0
@@ -544,11 +544,11 @@ class Eye:
         #如果timer等于动画周期，重置自身
         if self.blinkTimer >= self.timeStampList[self.currentFrame]:
             self.currentFrame += 1
-            self.vision = self.frameList[self.frameList[self.currentFrame]]
+            self.vision = self.frameList[self.framePlayList[self.currentFrame]]
         #如果timer等于当前帧对应的时间戳，则将当前帧记号加一,更新obj的vision
 
 class Mouth:
-    def __init__(self, loc = [0,0]):
+    def __init__(self, loc, frameList):
         self.loc = loc
 
         self.currentMouth = 0
@@ -556,7 +556,7 @@ class Mouth:
         self.mouthActTimer = 0
 
         self.vision = pygame.Surface((10,10))
-        self.frameList = []        
+        self.frameList = frameList        
         pass
 
     def init(self):

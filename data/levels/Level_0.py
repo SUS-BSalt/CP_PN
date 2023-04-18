@@ -6,7 +6,8 @@ def getFrames(num,source):
     temp = []
     for i in range(num):
         address = source+'%d'%(i+1)+'.png'
-        obj.frameList.append(pygame.image.load(address).convert_alpha())
+        temp.append(pygame.image.load(address).convert_alpha())
+    return temp
 
 
 class Manager_Level_0:
@@ -41,7 +42,7 @@ class Manager_Level_0:
             if event == "AVGMODULE_END":
                 print("end")
                 #self.followingEventList.remove(self.check_0)
-                GE.moduleList.remove(self.AVGModule)
+                self.moduleList.remove(self.AVGModule)
                 self.ACTModule = createACTModule()
                 self.followingEventList.remove(self.check_0)
                 self.followingEventList.append(self.check_1)
@@ -92,81 +93,38 @@ def createAVGModule():
     #（人物）
     satmic = AVGOBJ.Character(size=[150,200],loc=[600,70],color = (200,200,200))
     #（表情1）
-    expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Satmic/body.png'))
-
-    expressions.eyeSetting([72,51],3,)
-    appendFrame(expressions.eyes,3,"resources/GFX/Character/Satmic/eye/")
-
-    expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
-    appendFrame(expressions.mouth,4,"resources/GFX/Character/Satmic/mouth/")
-
-    satmic.expressionList.append(expressions)
+    expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Satmic/body.png').convert())
+    expressions.eyeSetting([72,51],3,getFrames(3,"resources/GFX/Character/Satmic/eye/"))
+    expressions.mouthSetting([88,89],getFrames(4,"resources/GFX/Character/Satmic/mouth/"))
+    satmic.expressionDict["blank"] = expressions
     #（表情1）
     satmic.init()
-    satmic.setExpression(0)
-
+    satmic.setExpression("blank")
     module_AVG.characterDict["Satmic"] = satmic
     #（人物）
 
     #（人物）
     Nacy = AVGOBJ.Character(size=[150,200],loc=[700,270],color = (200,200,200))
     #（表情1）
-    expressions = AVGOBJ.Expression()
-
-    expressions.body = pygame.image.load('resources/GFX/Character/Nacy/blank/body.jpg').convert_alpha()
-
-    expressions.eyes = AVGOBJ.Eye(loc=[72,51])
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
-
-    expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png").convert_alpha())
-
-    Nacy.expressionList.append(expressions)
+    expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Nacy/blank/body.jpg').convert_alpha())
+    expressions.eyeSetting([72,51],3,[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],(0,0),(50,100))
+    expressions.mouthSetting([88,89],[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],[0,0])
+    Nacy.expressionDict["blank"] = expressions
     #（表情1）
     #（表情2）
-    expressions = AVGOBJ.Expression()
-
-    expressions.body = pygame.image.load('resources/GFX/Character/Nacy/angry/body.jpg')
-
-    expressions.eyes = AVGOBJ.Eye(loc=[72,51])
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-
-    expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-
-    Nacy.expressionList.append(expressions)
+    expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Nacy/angry/body.jpg').convert_alpha())
+    expressions.eyeSetting([72,51],3,[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],(0,0),(50,100))
+    expressions.mouthSetting([88,89],[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],[0,0])
+    Nacy.expressionDict["angry"] = expressions
     #（表情2）
     #（表情3）
-    expressions = AVGOBJ.Expression()
-
-    expressions.body = pygame.image.load('resources/GFX/Character/Nacy/cute/body.jpg')
-
-    expressions.eyes = AVGOBJ.Eye(loc=[72,51])
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.eyes.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-
-    expressions.mouth = AVGOBJ.Mouth(loc=[88,89])
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-    expressions.mouth.frameList.append(pygame.image.load("resources/GFX/test/transparent.png"))
-
-    Nacy.expressionList.append(expressions)
+    expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Nacy/cute/body.jpg'))
+    expressions.eyeSetting([72,51],3,[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],(0,0),(50,100))
+    expressions.mouthSetting([88,89],[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],[0,0])
+    Nacy.expressionDict["cute"] = expressions
     #（表情3）
     Nacy.init()
-    Nacy.setExpression(0)
-
+    Nacy.setExpression("blank")
     module_AVG.characterDict["Nacy"] = Nacy
     #（人物）
     return module_AVG

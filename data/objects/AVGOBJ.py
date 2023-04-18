@@ -124,9 +124,9 @@ class AVGModule:
                 
     def printCurrentSentenceImmediately(self):
         while self.workingSituation == True:
-            self.reader.act()
-            for character in self.characterDict:
-                self.characterDict[character].act()
+            self.reader.update()
+            for character in self.onStageCharacterList:
+                character.update()
 
     def update(self):
         """接下来是很长的一串判定树，别急，我会在每一层都进行说明"""
@@ -194,7 +194,7 @@ class AVGModule:
                 self.textBox.init()
                 self.timer += 1
                 if self.timer >= self.printSpeed:
-                    self.reader.act()
+                    self.reader.update()
                     for character in self.onStageCharacterList:
                             if character.activeSituation == True:
                                 character.currentExpression.mouthAct()
@@ -319,14 +319,16 @@ class Reader:
                 self.master.textBox.wrapText()
 
             case _ if self.textEffect[:4] == 'face':
-                self.master.characterDict[self.textEffect[6:]].setExpression(int(self.textEffect[4:6]))
+                self.textEffect = self.textEffect.split("|")
+                self.master.characterDict[self.textEffect[1]].setExpression(self.textEffect[2])
             case _ if self.textEffect[:6] == 'appear':
-                self.master.onStageCharacterList.append(self.master.characterDict[self.textEffect[6:]])
+                self.textEffect = self.textEffect.split("|")
+                self.master.onStageCharacterList.append(self.master.characterDict[self.textEffect[1]])
             case _ if self.textEffect[:5] == 'leave':
-                self.master.onStageCharacterList.remove(self.master.characterDict[self.textEffect[6:]])
+                self.master.onStageCharacterList.remove(self.master.characterDict[self.textEffect[1]])
 
             case 'END':
-                self.master.eventList.append("END")
+                GE.eventList.append("AVGMODULE_END")
             case _ :
                 print("未知效果"+self.textEffect)
 
@@ -487,19 +489,15 @@ class Expression:
         self.vision = None
         self.body = body
 
-    def eyeSetting(self,loc = [0,0], eyesBlinkGap = 3, frameList = ()):
-        self.eyes = Eye(loc, eyesBlinkGap, frameList)
-
-    def mouthSetting(self,loc = [0,0], frameList = ()):
-        self.mouth = Mouth(loc, frameList)
+    def eyeSetting(self,loc = [0,0], eyesBlinkGap = 3, frameList = [], framePlayList = [0,1,2,1], timeStampList = [40,41,44,46]):
+        self.eyes = Eye(loc, eyesBlinkGap, frameList, framePlayList, timeStampList)
+    def mouthSetting(self,loc = [0,0], frameList = [], framePlayList = []):
+        self.mouth = Mouth(loc, frameList, framePlayList)
 
     def init(self):
-        self.vision = self.body.copy()
-
-        self.mouth.vision = self.mouth.frameList[0]
-
-        self.eyes.vision = self.eyes.frameList[0]
-    
+        self.mouth.init()
+        self.eyes.init()
+        self.vision = self.body
     def mouthAct(self):
         self.mouth.animate()
 
@@ -510,7 +508,7 @@ class Expression:
 
 
 class Eye:
-    def __init__(self, loc, eyesBlinkGap, frameList):
+    def __init__(self, loc, eyesBlinkGap, frameList, framePlayList, timeStampList):
         self.loc = loc
         self.currentEye = 0
 
@@ -520,12 +518,12 @@ class Eye:
 
         self.vision = None
         self.frameList = frameList
-        self.timeStampList = [40,41,44,46]
-        self.framePlayList = [0,1,2,1]
+        self.timeStampList = timeStampList
+        self.framePlayList = framePlayList
     def init(self):
         self.blinkTimer = 0
         self.currentFrame = 0
-        self.vision = self.frameList[self.frameList[0]]
+        self.vision = self.frameList[self.framePlayList[0]]
         self.activeSituation = False
         pass
     
@@ -548,7 +546,7 @@ class Eye:
         #如果timer等于当前帧对应的时间戳，则将当前帧记号加一,更新obj的vision
 
 class Mouth:
-    def __init__(self, loc, frameList):
+    def __init__(self, loc, frameList, framePlayList):
         self.loc = loc
 
         self.currentMouth = 0
@@ -556,7 +554,8 @@ class Mouth:
         self.mouthActTimer = 0
 
         self.vision = pygame.Surface((10,10))
-        self.frameList = frameList        
+        self.frameList = frameList
+        self.framePlayList = framePlayList
         pass
 
     def init(self):
@@ -564,8 +563,8 @@ class Mouth:
         self.vision = self.frameList[0]
 
     def animate(self):
-        self.vision = self.frameList[self.currentMouth]
-        self.currentMouth += random.randint(1,2)
+        self.vision = self.frameList[self.framePlayList[self.currentMouth]]
+        self.currentMouth += 1
 
         if self.currentMouth >= len(self.frameList):
-            self.currentMouth = 1
+            self.currentMouth = self.framePlayList[0]

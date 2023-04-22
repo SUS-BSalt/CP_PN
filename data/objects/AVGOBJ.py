@@ -60,7 +60,8 @@ class AVGModule:
                         self.skipSwitch = True
                     case "escape":
                         GE.controller = GE.escMenu.controller
-                        GE.manager = GE.escMenu                   
+                        GE.manager = GE.escMenu
+                        print(GE.manager)
 
             elif event.type == pygame.KEYUP:
                 match pygame.key.name(event.key):

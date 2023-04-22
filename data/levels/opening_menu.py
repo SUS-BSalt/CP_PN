@@ -51,11 +51,13 @@ class Manager_OpeningMenu:
         self.cover_mask_yloc -= 10
         self.openingMenu.activeMenu.loc[1] -= 10
         GE.camera.draw_UI(self.openingMenu.activeMenu.vision,self.openingMenu.activeMenu.loc)
+        for button in self.openingMenu.activeMenu.buttonList:
+            GE.camera.draw_UI(button.vision,tools.returnAbsLoc(self.openingMenu.activeMenu.loc,button.loc))
         GE.camera.draw(self.cover_mask,(0,self.cover_mask_yloc-75))
         GE.camera.draw(GE.camera.black,(0,self.cover_mask_yloc))
         if self.cover_mask_yloc <= 0 :
             from data.levels import Level_0
-        
+
 
 
 def create_OpingMenu():
@@ -150,12 +152,16 @@ GE.level_manager = manager
 manager.start()
 
 
+
 escMenuModule = UIObj.UIModule()
 GE.escMenu = escMenuModule
 
 #esc菜单
 escMenu = UIObj.Menu(activeSituation=True, size=[1280,720])
 escMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+escMenuModule.menuList.append(escMenu)
+escMenuModule.activeMenu = escMenu
+
 
 def backMethod():
     GE.controller = GE.level_manager.controller

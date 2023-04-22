@@ -29,8 +29,12 @@ class UIModule:
 
     def update(self):
         self.activeMenu.update()
-        if GE.GV.get("escape",True) and self.activeMenu.masterMenu != None:
-            self.activeMenu = self.activeMenu.masterMenu
+        if GE.GV.get("escape",True):
+            if self.activeMenu.masterMenu != None:
+                self.activeMenu = self.activeMenu.masterMenu
+            else:
+                GE.manager = GE.level_manager
+            GE.GV.get("escape",False)
 
     def animate(self):
         self.activeMenu.animate()

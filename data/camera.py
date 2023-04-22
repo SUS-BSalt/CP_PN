@@ -82,3 +82,4 @@ class Camera:
         #更新摄像机修正位置
         self.cameraLocRectify = [(event.x-setting.windowsize[0])/2,(event.y-setting.windowsize[1])/2]
         GE.screen.fill((0,0,0))
+        print(GE.manager)

@@ -1,21 +1,13 @@
 __name__ = "全局环境"
 import pygame as PG
-from data import setting
+from data import setting,tools
 from data.camera import Camera
 import json
 
-def loadAssetData(prePath,*argv):
-    order = "json.load(open('resources/asset.json','r',encoding='UTF-8'))"
-    for value in argv:
-        order = order + "[\"%s\"]" % value
-    tempDict = eval(order)
-    for loc in tempDict:
-        tempDict[loc] = prePath + tempDict[loc]
-    return tempDict
-
 #载入资产的位置信息，方便需要时直接读取
-GFX_UI = loadAssetData("resources/GFX/UI/","GFX","UI")
-GFX_test = loadAssetData("resources/GFX/test","GFX","UI")
+GFX_UI = tools.loadAssetData("resources/GFX/UI/","GFX","UI")
+GFX_test = tools.loadAssetData("resources/GFX/test","GFX","UI")
+#GFX_Character = tools.loadAssetData("resources/GFX/")
 
 PG.display.set_caption("CP_P")
 PG.display.set_icon(PG.image.load(GFX_UI["icon"]))
@@ -37,14 +29,14 @@ class GlobalValue:
 GV = GlobalValue()
 """global value全局变量字典"""
 
-screen = PG.display.set_mode(setting.windowsize,setting.windowflags,16)
+screen = PG.display.set_mode(setting.windowsize,setting.windowflags,8)
 """游戏窗口"""
 
 
 eventList = []
 """全局事件"""
 
-controller = 0
+controller = tools.controller_noMode
 """控制器"""
 
 camera = Camera()

@@ -1,5 +1,6 @@
 import pygame as PG
-from data import global_environment as GE
+from data import global_environment as GE,tools
+
 
 class UIModule:
     def __init__(self):
@@ -53,7 +54,7 @@ class Menu:
                 if GE.camera.mousePosCheck_UI(button.rect) == True:
                     button.exec()
                     GE.GV.set('click', False)
-            GE.camera.draw_UI(button.vision,button.loc)
+            GE.camera.draw_UI(button.vision,tools.returnAbsLoc(self.loc,button.loc))
 
         
         

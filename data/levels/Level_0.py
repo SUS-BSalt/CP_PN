@@ -129,6 +129,8 @@ def createAVGModule():
     #（人物）
     return module_AVG
 
+
+
 manager = Manager_Level_0()
 GE.manager = manager
 GE.level_manager = manager

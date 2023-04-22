@@ -1,16 +1,20 @@
 from data import global_environment as GE
 from data.objects import UIObj
-from data import setting
+from data import setting,tools
 import pygame as PG
 import os,sys
 
 class Manager_OpeningMenu:
     def __init__(self):
         self.activeSituation = True
-        self.internalEventList = []
-        self.globalEventList = []
         self.followingEventList = []
         self.moduleList = []
+
+        self.cover_mask_yloc = 720
+        """#转场黑幕遮罩的y坐标位置"""
+        self.cover_mask = tools.getImage("UI","mask_0.png")
+        self.cover_mask = PG.transform.rotate(self.cover_mask,180)
+        
     
     def update(self):
         for checker in self.followingEventList:
@@ -29,6 +33,30 @@ class Manager_OpeningMenu:
         self.moduleList.append(self.openingMenu)
         self.openingMenu.activeSituation = True
         GE.controller = self.openingMenu.controller
+        self.followingEventList.append(self.check_jump_to_Level_0)
+
+    def check_jump_to_Level_0(self):
+        if "jump_to_Level_0" in GE.eventList:
+            GE.eventList.remove("jump_to_Level_0")
+            #从事件列表中移除此事件
+            self.openingMenu.activeSituation = False
+            #关闭UI模组
+            GE.controller = tools.controller_noMode
+            #切换控制器到空控制器，以此剥夺玩家控制权
+            self.followingEventList.append(self.change_stage)
+            #添加转场函数进检查队列
+
+    def change_stage(self):
+        #转场效果
+        self.cover_mask_yloc -= 10
+        self.openingMenu.activeMenu.loc[1] -= 10
+        GE.camera.draw_UI(self.openingMenu.activeMenu.vision,self.openingMenu.activeMenu.loc)
+        GE.camera.draw(self.cover_mask,(0,self.cover_mask_yloc-75))
+        GE.camera.draw(GE.camera.black,(0,self.cover_mask_yloc))
+        if self.cover_mask_yloc <= 0 :
+            from data.levels import Level_0
+        
+
 
 def create_OpingMenu():
     openingMenu = UIObj.UIModule()
@@ -39,9 +67,8 @@ def create_OpingMenu():
     openingMenu.activeMenu = startMenu
 
     def startMethod():
-        global manager
-        del manager
-        from data.levels import Level_0
+        GE.eventList.append("jump_to_Level_0")
+        
 
     startMenu.appendButtonToMenu(startMethod,[100,150],[100,50],
                                     GE.UIfont_01.render(setting.START,False,(0,0,0)),

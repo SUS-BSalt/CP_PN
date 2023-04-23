@@ -10,12 +10,17 @@ class UIModule:
 
     def controller(self):
         GE.GV.set("click",False)
-        GE.GV.set("escape",False)
+        #GE.GV.set("escape",False)
         GE.camera.getMousePos()
         for event in PG.event.get():            
             if event.type == PG.KEYUP:
                 if PG.key.name(event.key) == "escape":
-                    GE.GV.set("escape",True)
+                    if self.activeMenu.masterMenu == None:
+                        GE.manager = GE.level_manager
+                        GE.controller = GE.level_manager.controller
+                        print("ee")
+                    else:
+                        self.activeMenu = self.activeMenu.masterMenu
 
             elif event.type == PG.MOUSEBUTTONUP:
                 GE.GV.set("click",True)
@@ -30,10 +35,7 @@ class UIModule:
     def update(self):
         self.activeMenu.update()
         if GE.GV.get("escape",True):
-            if self.activeMenu.masterMenu != None:
-                self.activeMenu = self.activeMenu.masterMenu
-            else:
-                GE.manager = GE.level_manager
+            
             GE.GV.get("escape",False)
 
     def animate(self):

@@ -33,6 +33,8 @@ class Manager_Level_0:
     def start(self):
         #self.ACTModule = createACTModule()
         self.AVGModule = createAVGModule()
+        GE.controller = self.AVGModule.controller
+        self.controller = self.AVGModule.controller
         self.followingEventList.append(self.check_0)
         self.moduleList.append(self.AVGModule)
         print(self.moduleList)
@@ -76,7 +78,6 @@ class Manager_Level_0:
 def createAVGModule():
     #（创建模块）
     module_AVG = AVGOBJ.AVGModule(open('data/levels/books/level_0.txt','r',encoding='UTF-8'))
-    GE.controller = module_AVG.controller
     module_AVG.clickArea = [0,470,800,300]
     module_AVG.activeSituation = True
     module_AVG.workingSituation = True

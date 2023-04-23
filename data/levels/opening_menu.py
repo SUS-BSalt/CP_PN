@@ -9,6 +9,7 @@ class Manager_OpeningMenu:
         self.activeSituation = True
         self.followingEventList = []
         self.moduleList = []
+        self.controller = None
 
         self.cover_mask_yloc = 720
         """#转场黑幕遮罩的y坐标位置"""
@@ -33,6 +34,7 @@ class Manager_OpeningMenu:
         self.moduleList.append(self.openingMenu)
         self.openingMenu.activeSituation = True
         GE.controller = self.openingMenu.controller
+        self.controller = self.openingMenu.controller
         self.followingEventList.append(self.check_jump_to_Level_0)
 
     def check_jump_to_Level_0(self):
@@ -50,20 +52,23 @@ class Manager_OpeningMenu:
         #转场效果
         self.cover_mask_yloc -= 10
         self.openingMenu.activeMenu.loc[1] -= 10
+
         GE.camera.draw_UI(self.openingMenu.activeMenu.vision,self.openingMenu.activeMenu.loc)
         for button in self.openingMenu.activeMenu.buttonList:
             GE.camera.draw_UI(button.vision,tools.returnAbsLoc(self.openingMenu.activeMenu.loc,button.loc))
         GE.camera.draw(self.cover_mask,(0,self.cover_mask_yloc-75))
         GE.camera.draw(GE.camera.black,(0,self.cover_mask_yloc))
+
         if self.cover_mask_yloc <= 0 :
             from data.levels import Level_0
+            
 
 
 
 def create_OpingMenu():
     openingMenu = UIObj.UIModule()
     #开始菜单
-    startMenu = UIObj.Menu(activeSituation=True, size=[1280,720])
+    startMenu = UIObj.Menu(activeSituation=True, loc = [0,0],size=[1280,720])
     startMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
     openingMenu.menuList.append(startMenu)
     openingMenu.activeMenu = startMenu
@@ -146,6 +151,8 @@ def create_OpingMenu():
     #设置菜单#
     return openingMenu
 
+
+
 manager = Manager_OpeningMenu()
 GE.manager = manager
 GE.level_manager = manager
@@ -153,15 +160,16 @@ manager.start()
 
 
 
+
 escMenuModule = UIObj.UIModule()
 GE.escMenu = escMenuModule
 
 #esc菜单
-escMenu = UIObj.Menu(activeSituation=True, size=[1280,720])
+escMenu = UIObj.Menu(activeSituation=True,loc=[0,0], size=[1280,720])
 escMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
 escMenuModule.menuList.append(escMenu)
 escMenuModule.activeMenu = escMenu
-
+print(escMenuModule.activeMenu.loc)
 
 def backMethod():
     GE.controller = GE.level_manager.controller
@@ -183,4 +191,3 @@ escMenu.appendButtonToMenu(backToOpeningMenu,[100,600],[150,80],
                                     GE.UIfont_02.render("返回主菜单",False,(0,0,0))
                                 )
     
-escMenuModule.menuList.append(escMenu)

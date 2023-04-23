@@ -58,10 +58,6 @@ class AVGModule:
                     case setting.skip:
                         #开始skip
                         self.skipSwitch = True
-                    case "escape":
-                        GE.controller = GE.escMenu.controller
-                        GE.manager = GE.escMenu
-                        print(GE.manager)
 
             elif event.type == pygame.KEYUP:
                 match pygame.key.name(event.key):
@@ -79,6 +75,12 @@ class AVGModule:
                             self.autoPlaySwitch = False
                         else:
                             self.autoPlaySwitch = True
+
+                    case "escape":
+                        GE.controller = GE.escMenu.controller
+                        GE.manager = GE.escMenu
+                        print(GE.manager)
+
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 GE.camera.getMousePos()

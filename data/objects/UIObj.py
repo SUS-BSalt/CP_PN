@@ -46,8 +46,8 @@ class Menu:
         self.activeSituation = activeSituation
         self.masterMenu = None
 
-        self.loc = loc
-        self.size = size
+        self.loc = loc.copy()
+        self.size = size.copy()
         self.rect = PG.Rect(self.loc,self.size)
         self.vision = None
         self.buttonList = []
@@ -83,8 +83,8 @@ class Menu:
 class Button:
     def __init__(self,loc = [0,0], size = [0,0], method = None):
         self.mouseActive = False
-        self.loc = loc
-        self.size = size
+        self.loc = loc.copy()
+        self.size = size.copy()
         self.rect = PG.Rect(self.loc,self.size)
         self.vision = None
         self.frameList = []

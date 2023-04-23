@@ -79,7 +79,6 @@ class AVGModule:
                     case "escape":
                         GE.controller = GE.escMenu.controller
                         GE.manager = GE.escMenu
-                        print(GE.manager)
 
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -207,7 +206,7 @@ class AVGModule:
             self.clickSwitch = False
             self.sleepSwitch = False
 
-        GE.camera.draw(GE.camera.white,(0,0))
+        GE.camera.draw(GE.camera.black,(0,0))
         GE.camera.draw(self.textBox.vision, self.textBox.loc)
         for character in self.onStageCharacterList:
             character.draw()
@@ -400,8 +399,8 @@ class LogsBox:
     def __init__(self,loc = [0,0], size = [10,10], textBoxHeight = 0 ):
         self.activeSituation = False
         self.animateSym = False
-        self.loc = loc
-        self.size = size
+        self.loc = loc.copy()
+        self.size = size.copy()
         self.rect = loc+size
         self.vision = pygame.Surface(size)
         self.tempVision = pygame.Surface(size)
@@ -452,8 +451,8 @@ class Character:
     def __init__(self, loc = [0,0], size = [0,0], color = (255,255,255)):
         self.activeSituation = False
 
-        self.loc = loc
-        self.size = size
+        self.loc = loc.copy()
+        self.size = size.copy()
         
         self.color = color
 

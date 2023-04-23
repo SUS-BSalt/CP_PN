@@ -1,4 +1,4 @@
-from data import global_environment as GE
+from data import global_environment as GE,tools
 from data.objects import AVGOBJ
 import pygame
 
@@ -78,17 +78,17 @@ class Manager_Level_0:
 def createAVGModule():
     #（创建模块）
     module_AVG = AVGOBJ.AVGModule(open('data/levels/books/level_0.txt','r',encoding='UTF-8'))
-    module_AVG.clickArea = [0,470,800,300]
+    module_AVG.clickArea = [0,420,1280,300]
     module_AVG.activeSituation = True
     module_AVG.workingSituation = True
     #（创建模块）
     #（创建textBox）
-    module_AVG.textBox = AVGOBJ.TextBox(loc=[0,470], size=[800,300])
-    module_AVG.textBox.frameList.append(pygame.image.load('resources/GFX/test/testarea_02.png').convert())
+    module_AVG.textBox = AVGOBJ.TextBox(loc=[0,420], size=[800,300])
+    module_AVG.textBox.frameList.append(tools.getImage("UI","textBox.png"))
     module_AVG.textBox.init()
     #（创建textBox）
     #(创建logsBox)
-    module_AVG.logsBox = AVGOBJ.LogsBox(loc=[0,0], size=[800,770], textBoxHeight=300)
+    module_AVG.logsBox = AVGOBJ.LogsBox(loc=[0,0], size=[1280,720], textBoxHeight=300)
     module_AVG.logsBox.backGroundVision = pygame.image.load(GE.GFX_UI["Logs"]).convert()
     #(创建logsBox)
     #（人物）

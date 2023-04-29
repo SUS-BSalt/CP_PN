@@ -1,5 +1,4 @@
 $[???]时候到了，执行四十四号任务
-《appear|Nacy》[Nacy]...
-[Nacy]《face|Nacy|blank》?!
-[Nacy]《face|Nacy|angry》YES,Master
+《NEXT》
+$[???]hello world
 《END》

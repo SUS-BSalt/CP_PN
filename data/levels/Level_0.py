@@ -35,11 +35,21 @@ class Manager_Level_0:
         self.AVGModule = createAVGModule()
         GE.controller = self.AVGModule.controller
         self.controller = self.AVGModule.controller
+
         self.followingEventList.append(self.check_0)
         self.moduleList.append(self.AVGModule)
         print(self.moduleList)
 
     def check_0(self):
+        if "NEXT" in GE.eventList:
+            print("next")
+            #self.followingEventList.remove(self.check_0)
+            self.moduleList.remove(self.AVGModule)
+            self.ACTModule = createACTModule()
+            self.followingEventList.remove(self.check_0)
+            self.followingEventList.append(self.check_1)
+
+    def check_2(self):
         for event in GE.eventList:
             if event == "AVGMODULE_END":
                 print("end")
@@ -83,13 +93,9 @@ def createAVGModule():
     module_AVG.workingSituation = True
     #（创建模块）
     #（创建textBox）
-    module_AVG.textBox = AVGOBJ.TextBox(loc=[0,420], size=[800,300])
-    module_AVG.textBox.frameList.append(tools.getImage("UI","textBox.png"))
-    module_AVG.textBox.init()
-    #（创建textBox）
+    module_AVG.setTextBox([0,420], [800,300], tools.getImage("UI","textBox.png"))
     #(创建logsBox)
-    module_AVG.logsBox = AVGOBJ.LogsBox(loc=[0,0], size=[1280,720], textBoxHeight=300)
-    module_AVG.logsBox.backGroundVision = pygame.image.load(GE.GFX_UI["Logs"]).convert()
+    module_AVG.setLogsBox([0,0], [1280,720], 300, tools.getImage("UI","Logs.png"))
     #(创建logsBox)
     #（人物）
     satmic = AVGOBJ.Character(size=[150,200],loc=[600,70],color = (200,200,200))

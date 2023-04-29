@@ -33,8 +33,6 @@ class AVGModule:
 
         self.book = book
 
-        self.textBox = None
-
         self.logsBox = None
 
         self.reader = Reader(self)
@@ -44,6 +42,15 @@ class AVGModule:
         
         self.timer = 0
         self.sleepTime = 0
+
+    def setTextBox(self, loc, size, vision):
+        self.textBox = TextBox(loc, size)
+        self.textBox.frameList.append(vision)
+        self.textBox.init()
+
+    def setLogsBox(self, loc, size,textBoxHeight = 300, vision):
+        self.logsBox = LogsBox(loc, size, textBoxHeight)
+        self.logsBox.backGroundVision = vision
 
 
     def init(self):
@@ -329,6 +336,8 @@ class Reader:
             case _ if self.textEffect[:5] == 'leave':
                 self.master.onStageCharacterList.remove(self.master.characterDict[self.textEffect[1]])
 
+            case "NEXT":
+                GE.eventList.append("NEXT")
             case 'END':
                 GE.eventList.append("AVGMODULE_END")
             case _ :

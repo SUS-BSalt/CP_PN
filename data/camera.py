@@ -45,6 +45,15 @@ class Camera:
     def draw_UI(self,vision,loc):
         self.draw_List_Creating_UI.append((vision,loc))
 
+    def zoomCamera(self,index):
+        """
+        该函数用于缩放场景用的shot，
+        index是缩放指数，指的是缩放后画面相对于最开始设定的大小的百分比，而不是相对于现在画面大小的百分比
+        """
+        self.loc[0] = self.loc[0] - (index - self.cameraScaleIndex)*self.size[0]*0.5
+        self.loc[1] = self.loc[1] - (index - self.cameraScaleIndex)*self.size[1]*0.5
+        self.cameraScaleIndex = index
+
     def executeDrawQuest(self):
         """执行绘制任务"""
         self.draw_List_Drawing = self.draw_List_Ready

@@ -1,6 +1,6 @@
 import pygame
 from data import global_environment as GE , setting
-import random
+
 
 
 class AVGModule:

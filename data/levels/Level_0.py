@@ -1,5 +1,5 @@
 from data import global_environment as GE,tools
-from data.objects import AVGOBJ
+from data.objects import AVGOBJ,Scence
 import pygame
 
 def getFrames(num,source):
@@ -36,6 +36,9 @@ class Manager_Level_0:
         GE.controller = self.AVGModule.controller
         self.controller = self.AVGModule.controller
 
+        GE.scence = createFirstScence()
+        self.scence = GE.scence
+
         self.followingEventList.append(self.check_0)
         self.moduleList.append(self.AVGModule)
         print(self.moduleList)
@@ -44,32 +47,29 @@ class Manager_Level_0:
         if "NEXT" in GE.eventList:
             print("next")
             #self.followingEventList.remove(self.check_0)
-            self.moduleList.remove(self.AVGModule)
-            self.ACTModule = createACTModule()
+            #self.moduleList.remove(self.AVGModule)
+            GE.camera.zoomCamera(0.5)
+            self.moduleList.append(self.scence)
             self.followingEventList.remove(self.check_0)
             self.followingEventList.append(self.check_1)
+            GE.eventList.remove("NEXT")
 
+    def check_1(self):
+        if "NEXT" in GE.eventList:
+            print("next")
+            pass
+    
     def check_2(self):
         for event in GE.eventList:
             if event == "AVGMODULE_END":
                 print("end")
                 #self.followingEventList.remove(self.check_0)
                 self.moduleList.remove(self.AVGModule)
-                self.ACTModule = createACTModule()
+                self.scence = GE.scence = createFirstScence()
                 self.followingEventList.remove(self.check_0)
-                self.followingEventList.append(self.check_1)
+                #self.followingEventList.append(self.check_1)
 
-    def check_1(self):
-        if self.ACTModule.player.loc[0] >= 1500:
-            for word in self.ACTModule.bottomUI.wordsList:
-                if word.label == 1:
-                    word.render((240,50,50))
-                    word.colorGradientSym = True
-                    word.color_org = (240,50,50)
-            self.followingEventList.remove(self.check_1)
-            self.followingEventList.append(self.check_injured)
-            self.followingEventList.append(self.check_recovery)
-        pass
+    
 
     def check_injured(self):
         if self.ACTModule.player.loc[0] >= 1700:
@@ -93,7 +93,7 @@ def createAVGModule():
     module_AVG.workingSituation = True
     #（创建模块）
     #（创建textBox）
-    module_AVG.setTextBox([0,420], [800,300], tools.getImage("UI","textBox.png"))
+    module_AVG.setTextBox([0,420], [1280,300], tools.getImage("UI","textBox.png"))
     #(创建logsBox)
     module_AVG.setLogsBox([0,0], [1280,720], 300, tools.getImage("UI","Logs.png"))
     #(创建logsBox)
@@ -136,7 +136,12 @@ def createAVGModule():
     #（人物）
     return module_AVG
 
-def createACTModule():
+def createFirstScence():
+    scence = Scence.Scence()
+    scence.appendPlane([-320,0],[1280,720],tools.getImage("Scence","level_0","light.png"),0)
+    scence.appendPlane([600,0],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.1)
+    return scence
+
     
 
 manager = Manager_Level_0()

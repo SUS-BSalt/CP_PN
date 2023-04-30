@@ -1,4 +1,2 @@
-$[???]时候到了，执行四十四号任务
-《NEXT》
-$[???]hello world
-《END》
+$[???]时候到了，执行四十四号任务《NEXT》
+$[???]hello world《END》

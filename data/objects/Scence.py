@@ -1,11 +1,12 @@
 import pygame
-import global_environment as GE
+from data import global_environment as GE
 
 
 class Scence:
     def __init__(self):
         self.objList = []
         self.tempCameraLocContainer = (0,0)
+        self.activeSituation = True
 
     def init(self,cameraLoc):
         for obj in self.objList:
@@ -19,20 +20,21 @@ class Scence:
         Perspective = PerspectiveObject(loc,size,appearLoc,disappearLoc,flag,vision,movingspeed)
         self.objList.append(Perspective)
 
-    def update(self,cameraLoc):
+    def update(self):
         #画面出现跳闪的一个原因便是：只有部分的obj完成更新时，camera的位置改变了，导致之后的obj根据新的loc进行更新
         # 故必须用一个新容器来把传入的loc固定住，因为python语言的特性，传入给函数的值永远是其指针，不能自行控制，真不方便！
         
         #顺带一提，另一个原因是画面没更新完毕时就开始了新的绘制，这个问题可以简单的把两个任务强制拉到一个线程里进行来解决
         #但是我希望能找到一个优雅的方法处理它,2023.3.22
-        if self.tempCameraLocContainer != cameraLoc:
-            self.tempCameraLocContainer = tuple(cameraLoc)
+        if self.tempCameraLocContainer != GE.camera.loc:
+            self.tempCameraLocContainer = tuple(GE.camera.loc)
             for obj in self.objList:
                 obj.update(self.tempCameraLocContainer)
+        self.draw()
         
     def draw(self):
         for obj in self.objList:
-            obj.draw()
+            GE.camera.draw(obj.vision,obj.loc)
     def animate(self):
         for obj in self.objList:
             obj.animate()

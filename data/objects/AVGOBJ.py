@@ -1,8 +1,6 @@
 import pygame
 from data import global_environment as GE , setting
 
-
-
 class AVGModule:
     """AVG模块，该类只负责逻辑处理，
     你需要在创建该模块后自行添加人物对象、文本框对象，转交当前控制器，设置点击的检测区域（或许该将其写成按钮），
@@ -48,7 +46,7 @@ class AVGModule:
         self.textBox.frameList.append(vision)
         self.textBox.init()
 
-    def setLogsBox(self, loc, size,textBoxHeight = 300, vision):
+    def setLogsBox(self, loc, size,textBoxHeight, vision):
         self.logsBox = LogsBox(loc, size, textBoxHeight)
         self.logsBox.backGroundVision = vision
 
@@ -86,6 +84,7 @@ class AVGModule:
                     case "escape":
                         GE.controller = GE.escMenu.controller
                         GE.manager = GE.escMenu
+                        print(GE.level_manager.moduleList)
 
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -213,12 +212,12 @@ class AVGModule:
             self.clickSwitch = False
             self.sleepSwitch = False
 
-        GE.camera.draw(GE.camera.black,(0,0))
-        GE.camera.draw(self.textBox.vision, self.textBox.loc)
+        #GE.camera.draw_UI(GE.camera.black,(0,0))
+        GE.camera.draw_UI(self.textBox.vision, self.textBox.loc)
         for character in self.onStageCharacterList:
             character.draw()
         if self.logsBox.activeSituation == True:
-            GE.camera.draw(self.logsBox.vision, self.logsBox.loc)
+            GE.camera.draw_UI(self.logsBox.vision, self.logsBox.loc)
 
         
 
@@ -347,9 +346,9 @@ class TextBox:
     """文本框，
     存了文本大小颜色等设置，以及打印与换行，
     记得给frameList添加图片，执行初始化方法"""
-    def __init__(self, size, loc):
-        self.size = size
+    def __init__(self, loc,size):
         self.loc = loc
+        self.size = size
         self.rect = self.loc + self.size
 
         self.vision = None

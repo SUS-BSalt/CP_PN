@@ -53,7 +53,10 @@ manager = None
 """当前程序的管理者"""
 
 level_manager = None
-"""关卡的管理"""
+"""关卡的管理者"""
 
 escMenu = None
 """按esc会跳出来的菜单"""
+
+scence = None
+"""场景"""

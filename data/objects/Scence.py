@@ -45,6 +45,7 @@ class Plane:
         self.size = size
         self.vision = vision
         self.movingSpeed = movingSpeed
+        """摄像机每移动x个像素，该物体移动x*movingSpeed个像素"""
 
     def init(self,cameraLoc):
         pass

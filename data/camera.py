@@ -7,6 +7,9 @@ class Camera:
         self.loc = [0,0]
         self.size = [1280,720]
         self.cameraShot = pygame.Surface(self.size)
+        self.cameraShotScence = pygame.Surface(self.size)
+        self.cameraScaleIndex = 1
+        """场景的camera,方便进行镜头缩放,同时相机的位置指的也是这玩意的位置"""
         self.white = pygame.Surface(self.size)
         self.white.fill((255,255,255))
         self.black = pygame.Surface(self.size)
@@ -19,10 +22,14 @@ class Camera:
         """创建好的绘制任务"""
         self.draw_List_Drawing = []
         """执行中的绘制任务"""
+        self.draw_List_Creating_UI = []
+        self.draw_List_Ready_UI = []
+        self.draw_List_Drawing_UI = []
+        """绘制任务三队列，UI版"""
         #如果可以的话，应该把这三个列表各自对齐内存块头部，以提高cache命中率
 
-        self.cameraLocRectify = [0,0]
-        self.cameraScaleIndex = setting.windowsize[0] / setting.org_windowsize[0]
+        self.windowLocRectify = [0,0]
+        self.windowScaleIndex = setting.windowsize[0] / setting.org_windowsize[0]
         """windowSize / org_windowsize"""
         self.mousePos = (0,0)
 
@@ -36,22 +43,30 @@ class Camera:
         self.draw_List_Creating.append((vision,(objLocOnPlayGround[0] - self.loc[0],objLocOnPlayGround[1] - self.loc[1])))
 
     def draw_UI(self,vision,loc):
-        self.draw_List_Creating.append((vision,loc))
+        self.draw_List_Creating_UI.append((vision,loc))
 
     def executeDrawQuest(self):
         """执行绘制任务"""
         self.draw_List_Drawing = self.draw_List_Ready
-        self.cameraShot.blits(self.draw_List_Drawing,False)
+        self.cameraShotScence.blits(self.draw_List_Drawing,False)
+        if self.cameraScaleIndex != 1:
+            self.cameraShot.blit(pygame.transform.scale(self.cameraShotScence,self.size),(0,0))
+        else:
+            self.cameraShot.blit(self.cameraShotScence,(0,0))
+        self.draw_List_Drawing_UI = self.draw_List_Ready_UI
+        self.cameraShot.blits(self.draw_List_Drawing_UI,False)
 
 
     def createDrawQuest(self):
         """创建绘制任务的同时，将现有的绘制任务状态切换为预备中"""
         self.draw_List_Ready = self.draw_List_Creating
         self.draw_List_Creating = []
+        self.draw_List_Ready_UI = self.draw_List_Creating_UI
+        self.draw_List_Creating_UI = []
 
     def getMousePos(self):
-        mousePosX = (pygame.mouse.get_pos()[0] - self.cameraLocRectify[0])/self.cameraScaleIndex + self.loc[0]
-        mousePosY = (pygame.mouse.get_pos()[1] - self.cameraLocRectify[1])/self.cameraScaleIndex + self.loc[1]
+        mousePosX = (pygame.mouse.get_pos()[0] - self.windowLocRectify[0])/self.windowScaleIndex + self.loc[0]
+        mousePosY = (pygame.mouse.get_pos()[1] - self.windowLocRectify[1])/self.windowScaleIndex + self.loc[1]
         self.mousePos = (mousePosX, mousePosY)
         return(mousePosX, mousePosY)
     
@@ -75,11 +90,11 @@ class Camera:
     def resetWindow(self,event):
         if event.x/event.y > setting.org_windowsize[0]/setting.org_windowsize[1]:
             setting.windowsize = ((setting.org_windowsize[0]/setting.org_windowsize[1])*event.y,event.y)
-            self.cameraScaleIndex = event.y / setting.org_windowsize[1]
+            self.windowScaleIndex = event.y / setting.org_windowsize[1]
         else:
             setting.windowsize = (event.x,event.x/(setting.org_windowsize[0]/setting.org_windowsize[1]))
-            self.cameraScaleIndex = event.x / setting.org_windowsize[0]
+            self.windowScaleIndex = event.x / setting.org_windowsize[0]
         #更新摄像机修正位置
-        self.cameraLocRectify = [(event.x-setting.windowsize[0])/2,(event.y-setting.windowsize[1])/2]
+        self.windowLocRectify = [(event.x-setting.windowsize[0])/2,(event.y-setting.windowsize[1])/2]
         GE.screen.fill((0,0,0))
         print(GE.manager)

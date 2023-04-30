@@ -74,7 +74,7 @@ class MainGame:
             self.drawLoopclock.tick(setting.drawLoopFps)
             #保持循环的fps
             GE.camera.executeDrawQuest()#执行绘制任务
-            GE.screen.blit(pygame.transform.scale(GE.camera.cameraShot,setting.windowsize),GE.camera.cameraLocRectify)
+            GE.screen.blit(pygame.transform.scale(GE.camera.cameraShot,setting.windowsize),GE.camera.windowLocRectify)
             #将画面缩放到窗口大小
             pygame.display.update()
             #更新画面

@@ -56,8 +56,8 @@ class Manager_OpeningMenu:
         GE.camera.draw_UI(self.openingMenu.activeMenu.vision,self.openingMenu.activeMenu.loc)
         for button in self.openingMenu.activeMenu.buttonList:
             GE.camera.draw_UI(button.vision,tools.returnAbsLoc(self.openingMenu.activeMenu.loc,button.loc))
-        GE.camera.draw(self.cover_mask,(0,self.cover_mask_yloc-75))
-        GE.camera.draw(GE.camera.black,(0,self.cover_mask_yloc))
+        GE.camera.draw_UI(self.cover_mask,(0,self.cover_mask_yloc-75))
+        GE.camera.draw_UI(GE.camera.black,(0,self.cover_mask_yloc))
 
         if self.cover_mask_yloc <= 0 :
             from data.levels import Level_0

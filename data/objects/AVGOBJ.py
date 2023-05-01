@@ -84,14 +84,16 @@ class AVGModule:
                     case "escape":
                         GE.controller = GE.escMenu.controller
                         GE.manager = GE.escMenu
-                        print(GE.level_manager.moduleList)
+                        #print(GE.level_manager.moduleList)
+                        #print(GE.camera.loc)
+                        print(GE.scence.objList[0])
 
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 GE.camera.getMousePos()
                 #print(GE.camera.getMousePos(),self.clickArea)
                 if self.logsBox.activeSituation == True:
-                    GE.camera.mousePosCheck(self.logsBox.rect)
+                    GE.camera.mousePosCheck_UI(self.logsBox.rect)
                     match event.button:
                         case 1 :
                             self.logsBox.init()
@@ -108,7 +110,7 @@ class AVGModule:
                             self.logsBox.animateSym = True
                             #更新logs菜单
                         
-                elif GE.camera.mousePosCheck(self.clickArea):
+                elif GE.camera.mousePosCheck_UI(self.clickArea):
                     match event.button:
                         case 1:
                             self.clickSwitch = True
@@ -478,9 +480,9 @@ class Character:
         self.currentExpression = self.expressionDict[expression]
         
     def draw(self):
-        GE.camera.draw(self.currentExpression.vision,self.loc)
-        GE.camera.draw(self.currentExpression.mouth.vision,self.returnPartsAbsLoc(self.currentExpression.mouth.loc))
-        GE.camera.draw(self.currentExpression.eyes.vision,self.returnPartsAbsLoc(self.currentExpression.eyes.loc))
+        GE.camera.draw_UI(self.currentExpression.vision,self.loc)
+        GE.camera.draw_UI(self.currentExpression.mouth.vision,self.returnPartsAbsLoc(self.currentExpression.mouth.loc))
+        GE.camera.draw_UI(self.currentExpression.eyes.vision,self.returnPartsAbsLoc(self.currentExpression.eyes.loc))
         pass
     def returnPartsAbsLoc(self,partsLoc):
         return (self.loc[0]+partsLoc[0],self.loc[1]+partsLoc[1])

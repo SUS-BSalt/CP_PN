@@ -53,6 +53,7 @@ class Camera:
         self.loc[0] = self.loc[0] - (index - self.cameraScaleIndex)*self.size[0]*0.5
         self.loc[1] = self.loc[1] - (index - self.cameraScaleIndex)*self.size[1]*0.5
         self.cameraScaleIndex = index
+        self.cameraShotScence = pygame.Surface((self.size[0]*index,self.size[1]*index))
 
     def executeDrawQuest(self):
         """执行绘制任务"""
@@ -86,7 +87,9 @@ class Camera:
             self.mousePos[1] < rect[1]+rect[3]:
             return True
         else:
+            print(rect,self.mousePos)
             return False
+            
     def mousePosCheck_UI(self,rect):
         if  self.mousePos[0] - self.loc[0] > rect[0] and \
             self.mousePos[1] - self.loc[1] > rect[1] and \

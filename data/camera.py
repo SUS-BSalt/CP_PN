@@ -9,6 +9,7 @@ class Camera:
         self.cameraShot = pygame.Surface(self.size)
         self.cameraShotScence = pygame.Surface(self.size)
         self.cameraScaleIndex = 1
+        self.cameraScaleRectify = [0,0]
         """场景的camera,方便进行镜头缩放,同时相机的位置指的也是这玩意的位置"""
         self.white = pygame.Surface(self.size)
         self.white.fill((255,255,255))
@@ -40,7 +41,10 @@ class Camera:
         self.loc = [self.loc[0]+rectify[0],self.loc[1]+rectify[1]]
 
     def draw(self,vision,objLocOnPlayGround):
-        self.draw_List_Creating.append((vision,(objLocOnPlayGround[0] - self.loc[0],objLocOnPlayGround[1] - self.loc[1])))
+        if self.cameraScaleIndex != 1:
+            self.draw_List_Creating.append((vision,(objLocOnPlayGround[0] - self.loc[0] + self.cameraScaleRectify[0],objLocOnPlayGround[1] - self.loc[1] + self.cameraScaleRectify[1])))
+        else:
+            self.draw_List_Creating.append((vision,(objLocOnPlayGround[0] - self.loc[0],objLocOnPlayGround[1] - self.loc[1])))
 
     def draw_UI(self,vision,loc):
         self.draw_List_Creating_UI.append((vision,loc))
@@ -50,8 +54,8 @@ class Camera:
         该函数用于缩放场景用的shot，
         index是缩放指数，指的是缩放后画面相对于最开始设定的大小的百分比，而不是相对于现在画面大小的百分比
         """
-        self.loc[0] = self.loc[0] - (index - self.cameraScaleIndex)*self.size[0]*0.5
-        self.loc[1] = self.loc[1] - (index - self.cameraScaleIndex)*self.size[1]*0.5
+        self.cameraScaleRectify[0] = (index - 1)*self.size[0]*0.5
+        self.cameraScaleRectify[1] = (index - 1)*self.size[1]*0.5
         self.cameraScaleIndex = index
         self.cameraShotScence = pygame.Surface((self.size[0]*index,self.size[1]*index))
 

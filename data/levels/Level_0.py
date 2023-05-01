@@ -31,6 +31,7 @@ class Manager_Level_0:
                     module.animate()
 
     def start(self):
+        """开始"""
         #self.ACTModule = createACTModule()
         self.AVGModule = createAVGModule()
         GE.controller = self.AVGModule.controller
@@ -44,38 +45,50 @@ class Manager_Level_0:
         print(self.moduleList)
 
     def check_0(self):
+        """从开始的黑屏到简笔画方尖碑"""
         if "NEXT" in GE.eventList:
             print("next")
             print(GE.scence.objList[0].loc)
-            #self.followingEventList.remove(self.check_0)
-            #self.moduleList.remove(self.AVGModule)
             self.moduleList.append(self.scence)
             self.followingEventList.remove(self.check_0)
             self.followingEventList.append(self.check_1)
             GE.eventList.remove("NEXT")
 
     def check_1(self):
+        """从简笔画方尖碑到像素款"""
         if "NEXT" in GE.eventList:
             print("next")
             #print(GE.scence.objList[0].loc)
-            GE.camera.zoomCamera(1.5)
+            GE.camera.zoomCamera(2)
             #print(GE.scence.objList[0].loc)
             self.scence.objList.pop()
             self.followingEventList.remove(self.check_1)
             self.followingEventList.append(self.check_2)
-            self.check_2_timer = 0
             print(GE.scence.objList[0].loc)
             GE.eventList.remove("NEXT")
 
     def check_2(self):
-        #self.check_2_timer += 1
-        #GE.camera.zoomCamera(0.5+self.check_2_timer*0.0025)
-        if self.check_2_timer == 200:
-            GE.camera.zoomCamera(1)
+        """检测何时开始拉伸镜头"""
+        if "NEXT" in GE.eventList:
+            print("next")
             self.followingEventList.remove(self.check_2)
             self.followingEventList.append(self.check_3)
+            self.check_2_timer = 0
+            print(GE.scence.objList[0].loc)
+            GE.eventList.remove("NEXT")
 
     def check_3(self):
+        """拉伸镜头的方法"""
+        self.check_2_timer += 1
+        GE.camera.zoomCamera(2-self.check_2_timer*0.01)
+        GE.scence.objList[0].loc[1] -= 6
+        GE.scence.objList[1].loc[1] -= 1.5
+        print(GE.camera.cameraScaleRectify)
+        if self.check_2_timer == 100:
+            self.followingEventList.remove(self.check_3)
+            #self.followingEventList.append(self.check_4)
+
+    def check_4(self):
         GE.camera.zoomCamera(1)
         pass
     
@@ -160,8 +173,8 @@ def createAVGModule():
 
 def createFirstScence():
     scence = Scence.Scence()
-    scence.appendPlane([-320,-180],[1920,1080],tools.getImage("Scence","level_0","light.png"),0)
-    scence.appendPlane([600,0],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.1)
+    scence.appendPlane([-640,-360],[2650,1440],tools.getImage("Scence","level_0","light.png"),0)
+    scence.appendPlane([600,-360],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.1)
     scence.appendPlane([0,0],[1280,720],tools.getImage("Scence","level_0","talker.png"),0.1)
     return scence
 

@@ -10,6 +10,7 @@ class Camera:
         self.cameraShotScence = pygame.Surface(self.size)
         self.cameraScaleIndex = 1
         self.cameraScaleRectify = [0,0]
+        self.zoomed = False
         """场景的camera,方便进行镜头缩放,同时相机的位置指的也是这玩意的位置"""
         self.white = pygame.Surface(self.size)
         self.white.fill((255,255,255))
@@ -57,11 +58,16 @@ class Camera:
         self.cameraScaleRectify[0] = (index - 1)*self.size[0]*0.5
         self.cameraScaleRectify[1] = (index - 1)*self.size[1]*0.5
         self.cameraScaleIndex = index
-        self.cameraShotScence = pygame.Surface((self.size[0]*index,self.size[1]*index))
-
+        self.zoomed = True
+        
     def executeDrawQuest(self):
         """执行绘制任务"""
         self.draw_List_Drawing = self.draw_List_Ready
+
+        if self.zoomed:
+            self.cameraShotScence = pygame.Surface((self.size[0]*self.cameraScaleIndex,self.size[1]*self.cameraScaleIndex))
+            self.zoomed = False
+            
         self.cameraShotScence.blits(self.draw_List_Drawing,False)
         if self.cameraScaleIndex != 1:
             self.cameraShot.blit(pygame.transform.scale(self.cameraShotScence,self.size),(0,0))

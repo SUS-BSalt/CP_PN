@@ -1,5 +1,5 @@
 from data import global_environment as GE,tools
-from data.objects import AVGOBJ,Scence
+from data.objects import AVGOBJ,Scence,ACT_main
 import pygame
 
 def getFrames(num,source):
@@ -37,12 +37,20 @@ class Manager_Level_0:
         GE.controller = self.AVGModule.controller
         self.controller = self.AVGModule.controller
 
-        GE.scence = createFirstScence()
-        self.scence = GE.scence
+        self.scence =GE.scence = createFirstScence()
+        #self.scence = GE.scence
+        
+        self.ACTModule = createACTModule()
+
 
         self.followingEventList.append(self.check_0)
+        self.followingEventList.append(self.draw_black_block)
+        self.black_block_loc = [0,420]
         self.moduleList.append(self.AVGModule)
         print(self.moduleList)
+
+    def draw_black_block(self):
+        GE.camera.draw_UI(GE.camera.black,self.black_block_loc)
 
     def check_0(self):
         """从开始的黑屏到简笔画方尖碑"""
@@ -73,19 +81,28 @@ class Manager_Level_0:
             print("next")
             self.followingEventList.remove(self.check_2)
             self.followingEventList.append(self.check_3)
-            self.check_2_timer = 0
-            print(GE.scence.objList[0].loc)
+            #增删事件触发
+            self.check_3_timer = 0
+            #设置下一个check所需的计时器
+            GE.controller = tools.controller_noMode
+            #转交控制器
+            self.moduleList.append(self.ACTModule)
             GE.eventList.remove("NEXT")
+            #完成事件处理，将其移除
 
     def check_3(self):
         """拉伸镜头的方法"""
-        self.check_2_timer += 1
-        GE.camera.zoomCamera(2-self.check_2_timer*0.01)
-        GE.scence.objList[0].loc[1] -= 6
-        GE.scence.objList[1].loc[1] -= 1.5
-        print(GE.camera.cameraScaleRectify)
-        if self.check_2_timer == 100:
+        self.check_3_timer += 1
+        GE.camera.zoomCamera(2-self.check_3_timer*0.01)
+        GE.camera.updateCameraLoc((0,3))
+        GE.scence.objList[1].loc[1] += 2
+        self.AVGModule.textBox.loc[1] += 3
+        self.black_block_loc[1] += 3
+        #print(GE.scence.objList[1].loc[0])
+        if self.check_3_timer == 100:
+            GE.camera.zoomCamera(1)
             self.followingEventList.remove(self.check_3)
+            GE.controller = self.controller
             #self.followingEventList.append(self.check_4)
 
     def check_4(self):
@@ -94,31 +111,7 @@ class Manager_Level_0:
     
             
 
-    def check_1111(self):
-        for event in GE.eventList:
-            if event == "AVGMODULE_END":
-                print("end")
-                #self.followingEventList.remove(self.check_0)
-                self.moduleList.remove(self.AVGModule)
-                self.scence = GE.scence = createFirstScence()
-                self.followingEventList.remove(self.check_0)
-                #self.followingEventList.append(self.check_1)
 
-    
-
-    def check_injured(self):
-        if self.ACTModule.player.loc[0] >= 1700:
-            self.ACTModule.bottomUI.randomPrintSwitch = True
-            self.timer = 0
-            self.followingEventList.remove(self.check_injured)
-            pass
-    
-    def check_recovery(self):
-        if self.ACTModule.player.loc[0] >= 1900:
-            self.ACTModule.bottomUI.recoverSwitch = True
-            self.timer = 0
-            #self.followingEventList.remove(self.check_injured)
-            pass
 
 def createAVGModule():
     #（创建模块）
@@ -177,6 +170,12 @@ def createFirstScence():
     scence.appendPlane([600,-360],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.1)
     scence.appendPlane([0,0],[1280,720],tools.getImage("Scence","level_0","talker.png"),0.1)
     return scence
+
+def createACTModule():
+    module_ACT = ACT_main.ACTModule()
+    module_ACT.setPlayer([640,720])
+    module_ACT.setBottomUI([640,720])
+    return module_ACT
 
     
 

@@ -3,10 +3,13 @@ import os
 import json
 from data import global_environment as GE
 
-def getFrames(path) -> list:
+def getFrames(*path) -> list:
+    truePath = "resources/GFX"
+    for value in path:
+        truePath = truePath + "/" + "%s" % value
     temp = []
-    for frame in sorted(os.listdir(path)):
-        temp.append(PG.image.load(frame).convert_alpha())
+    for frame in sorted(os.listdir(truePath)):
+        temp.append(PG.image.load(truePath+"/"+frame).convert_alpha())
     return temp
 
 def getImage(*path) -> PG.Surface:

@@ -45,22 +45,19 @@ class Manager_OpeningMenu:
             #关闭UI模组
             GE.controller = tools.controller_noMode
             #切换控制器到空控制器，以此剥夺玩家控制权
+            self.change_stage_timer = 0
             self.followingEventList.append(self.change_stage)
             #添加转场函数进检查队列
 
     def change_stage(self):
         #转场效果
-        self.cover_mask_yloc -= 10
-        self.openingMenu.activeMenu.loc[1] -= 10
-
-        GE.camera.draw_UI(self.openingMenu.activeMenu.vision,self.openingMenu.activeMenu.loc)
-        for button in self.openingMenu.activeMenu.buttonList:
-            GE.camera.draw_UI(button.vision,tools.returnAbsLoc(self.openingMenu.activeMenu.loc,button.loc))
-        GE.camera.draw_UI(self.cover_mask,(0,self.cover_mask_yloc-75))
-        GE.camera.draw_UI(GE.camera.black,(0,self.cover_mask_yloc))
-
-        if self.cover_mask_yloc <= 0 :
-            from data.levels import Level_0
+        self.change_stage_timer += 1
+        match self.change_stage_timer:
+            case 1:
+                GE.camera.draw(GE.camera.black,(0,0))
+            case 50:
+                GE.camera.draw(GE.camera.black,(0,0))
+                from data.levels import Level_0
             
 
 

@@ -102,7 +102,7 @@ class Manager_Level_0:
         if self.check_3_timer == 100:
             GE.camera.zoomCamera(1)
             self.followingEventList.remove(self.check_3)
-            GE.controller = self.controller
+            GE.controller = self.controller = self.ACTModule.controller
             #self.followingEventList.append(self.check_4)
 
     def check_4(self):
@@ -166,15 +166,15 @@ def createAVGModule():
 
 def createFirstScence():
     scence = Scence.Scence()
-    scence.appendPlane([-640,-360],[2650,1440],tools.getImage("Scence","level_0","light.png"),0)
-    scence.appendPlane([600,-360],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.1)
+    scence.appendPlane([-640,-360],[2650,1440],tools.getImage("Scence","level_0","light.png"),1)
+    scence.appendPlane([600,-360],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.6)
     scence.appendPlane([0,0],[1280,720],tools.getImage("Scence","level_0","talker.png"),0.1)
     return scence
 
 def createACTModule():
     module_ACT = ACT_main.ACTModule()
-    module_ACT.setPlayer([640,720])
-    module_ACT.setBottomUI([640,720])
+    module_ACT.setPlayer([680,1020])
+    module_ACT.setBottomUI([0,-1000], [640,720], "data/levels/books/level_0_0.txt")
     return module_ACT
 
     

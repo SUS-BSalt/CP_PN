@@ -76,7 +76,7 @@ class Player:
         return False
 
 
-    def act(self):
+    def update(self):
         #只认可最新输入的两个指令
         #节奏的判定
         #当其执行攻击或防御时，传递一个打击的事件，让上层的模组去读取。
@@ -111,6 +111,8 @@ class Player:
                 pass
 
             #如果输入列表不为空，执行输入信号，归零计时器，重置动作
+
+        GE.camera.draw(self.currentAction.vision,self.currentAction.picLoc)
 
         
     def draw(self):

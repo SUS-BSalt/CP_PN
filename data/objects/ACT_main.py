@@ -19,8 +19,8 @@ class ACTModule:
     def setPlayer(self,loc):
         self.player = ACT_player.Player(loc)
 
-    def setBottomUI(self,book):
-        self.bottomUI = ACT_UI.bottomUI((1280,360),(0,0),self,book)
+    def setBottomUI(self,loc, size, book):
+        self.bottomUI = ACT_UI.bottomUI(loc, size, self,open(book,'r',encoding='UTF-8'))
 
     def controller(self):
         for event in pygame.event.get():
@@ -29,6 +29,7 @@ class ACTModule:
                     case "a":
                         self.player.leftMoveSymbol = True
                         self.player.inputList.append("l")
+                        print()
                     case "d":
                         self.player.rightMoveSymbol = True
                         self.player.inputList.append("r")

@@ -112,12 +112,12 @@ class bottomUI:
         self.draw()
     
     def draw(self):
-        GE.camera.draw_UI(self.backgroundPic,(0,360))
+        GE.camera.draw_UI(self.backgroundPic,self.loc)
         for word in self.wordsList:
             GE.camera.draw_UI(word.vision,(word.loc[0],word.loc[1]+360))
         for word in self.floatingWordsList:
             GE.camera.draw_UI(word.vision,(word.loc[0],word.loc[1]+360))
-        GE.camera.draw_UI(self.backgroundMask_0,(0,360))
+        GE.camera.draw_UI(self.backgroundMask_0,self.loc)
 
     def animate(self):
         for word in self.wordsList:

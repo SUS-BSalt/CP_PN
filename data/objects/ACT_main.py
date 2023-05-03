@@ -29,7 +29,7 @@ class ACTModule:
                     case "a":
                         self.player.leftMoveSymbol = True
                         self.player.inputList.append("l")
-                        print()
+                        
                     case "d":
                         self.player.rightMoveSymbol = True
                         self.player.inputList.append("r")
@@ -38,16 +38,7 @@ class ACTModule:
                         self.player.shiftSymbol = True
                         self.player.inputList.append("shift")
 
-                    case "escape":
-                        print("coerciveActingSymbol",self.player.coerciveActingSymbol)
-                        print("playLoc",self.player.loc)
-                        print("playerFaceSide",self.player.faceSide)
-                        print("cameraLoc",GE.camera.loc)
-                        print("mousePos",GE.camera.mousePos)
-                        #print("word_0",self.bottomUI.wordsList[0].colorGradientSym)
-                        #print("word_float",len(self.bottomUI.floatingWordsList))
-                        GE.controller = GE.escMenu.controller
-                        GE.manager = GE.escMenu
+                    
             if event.type == pygame.KEYUP:
                 match pygame.key.name(event.key):
                     case "a":
@@ -61,6 +52,17 @@ class ACTModule:
                     case "shift":
                         self.player.shiftSymbol = False
                         self.player.inputList.append("shiftUP")
+
+                    case "escape":
+                        print("coerciveActingSymbol",self.player.coerciveActingSymbol)
+                        print("playLoc",self.player.loc)
+                        print("playerFaceSide",self.player.faceSide)
+                        print("cameraLoc",GE.camera.loc)
+                        print("mousePos",GE.camera.mousePos)
+                        #print("word_0",self.bottomUI.wordsList[0].colorGradientSym)
+                        #print("word_float",len(self.bottomUI.floatingWordsList))
+                        GE.controller = GE.escMenu.controller
+                        GE.manager = GE.escMenu
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 match event.button:
                     case 1 :

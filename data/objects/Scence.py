@@ -3,14 +3,21 @@ from data import global_environment as GE
 
 
 class Scence:
-    def __init__(self):
+    def __init__(self,size):
+        self.size = size
         self.objList = []
         self.tempCameraLocContainer = (0,0)
         self.activeSituation = True
-
+        self.collisionObjGroup = pygame.sprite.Group()
     def init(self,cameraLoc):
         for obj in self.objList:
             obj.init(cameraLoc)
+
+    def appendCollisionObj(self,x, y, width, height):
+        self.collisionObjGroup.add(Collider(x, y, width, height))
+
+    #def collisionDetection(self,)
+
     
     def appendPlane(self,loc,size,vision,movingSpeed):
         plane = Plane(loc,size,vision,movingSpeed)
@@ -130,3 +137,14 @@ class PerspectiveObject:
         self.scaleIndex=(self.disappearLoc[0] - cameraLoc[0])/self.theCameraMovingDistanceThenTheObjAppearOnScreen
         self.vision = pygame.transform.scale(self.org_vision, (self.size[0]*self.scaleIndex,self.size[1]))
         self.blitLoc = (self.loc[0] - self.size[0]*self.scaleIndex,self.loc[1])
+
+class Collider(pygame.sprite.Sprite):
+    """Invisible sprites placed overtop background parts
+    that can be collided with (pipes, steps, ground, etc."""
+    def __init__(self, x, y, width, height):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((width, height)).convert()
+        #self.image.fill(c.RED)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y

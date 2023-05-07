@@ -2,8 +2,9 @@ import pygame
 from data import global_environment as GE,tools
 
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self, loc):
+        pygame.sprite.Sprite.__init__(self)
         self.inputList = []
 
         self.eventList = []
@@ -88,12 +89,12 @@ class Player:
 
         elif self.coerciveActingSymbol == True:
             #如果在强制行动中，执行当前动作
-            self.currentAction.act()
+            self.currentAction.update()
             pass
 
         elif self.coerciveActingSymbol == False:
             #当玩家不在强制行动中
-            self.currentAction.act()
+            self.currentAction.update()
             #执行当前动作
             
             if self.inputList != []:
@@ -374,7 +375,7 @@ class NormalAttack:
             self.locatedPicLoc(self.act1_picLocRectify)
         self.init()
         
-    def act(self):
+    def update(self):
         self.master.timer += 1
 
         if self.master.timer > self.coerciveActingFrame:
@@ -451,7 +452,7 @@ class Walking:
         self.locatedPicLoc(self.picLocRectify[0])
         self.init()
 
-    def act(self):
+    def update(self):
         self.master.timer += 1
         GE.camera.updateCameraLoc((self.cameraMovingSpeed,0))
         
@@ -517,7 +518,7 @@ class Standing:
         self.locatedPicLoc(self.picLocRectify)
         self.init()
 
-    def act(self):
+    def update(self):
         self.master.timer += 1
 
         if self.master.timer >= self.timeStampList[-1]:

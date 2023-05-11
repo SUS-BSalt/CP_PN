@@ -16,7 +16,9 @@ class Scence:
     def appendCollisionObj(self,x, y, width, height):
         self.collisionObjGroup.add(Collider(x, y, width, height))
 
-    #def collisionDetection(self,)
+    def collisionDetection(self,sprite) :
+        collider = pygame.sprite.spritecollideany(sprite,self.collisionObjGroup)
+        return collider
 
     
     def appendPlane(self,loc,size,vision,movingSpeed):

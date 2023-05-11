@@ -1,6 +1,6 @@
 import pygame
 from data.objects import ACT_player,ACT_UI
-from data import global_environment as GE
+from data import global_environment as GE,setting
 
 class ACTModule:
     def __init__(self):
@@ -26,39 +26,37 @@ class ACTModule:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 match pygame.key.name(event.key):
-                    case "a":
+                    case setting.left:
                         self.player.leftMoveSymbol = True
-                        self.player.inputList.append("l")
+                        self.player.inputList.append("left")
                         
-                    case "d":
+                    case setting.right:
                         self.player.rightMoveSymbol = True
-                        self.player.inputList.append("r")
+                        self.player.inputList.append("right")
                     
-                    case "shift":
+                    case setting.shift:
                         self.player.shiftSymbol = True
-                        self.player.inputList.append("shift")
 
                     
             if event.type == pygame.KEYUP:
                 match pygame.key.name(event.key):
-                    case "a":
+                    case setting.left:
                         self.player.leftMoveSymbol = False
-                        self.player.inputList.append("keyUP")
 
-                    case "d":
+                    case setting.right:
                         self.player.rightMoveSymbol = False
-                        self.player.inputList.append("keyUP")
                     
-                    case "shift":
+                    case setting.shift:
                         self.player.shiftSymbol = False
-                        self.player.inputList.append("shiftUP")
 
                     case "escape":
                         print("coerciveActingSymbol",self.player.coerciveActingSymbol)
                         print("playLoc",self.player.loc)
                         print("playerFaceSide",self.player.faceSide)
+                        print("playRect",self.player.rect)
                         print("cameraLoc",GE.camera.loc)
                         print("mousePos",GE.camera.mousePos)
+                        
                         #print("word_0",self.bottomUI.wordsList[0].colorGradientSym)
                         #print("word_float",len(self.bottomUI.floatingWordsList))
                         GE.controller = GE.escMenu.controller
@@ -66,12 +64,18 @@ class ACTModule:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 match event.button:
                     case 1 :
-                        self.player.inputList.append("a")
+                        self.player.inputList.append("atk")
                     case 3:
-                        self.player.inputList.append("d")
+                        self.player.defenceSymbol = True
+                        self.player.inputList.append("def")
+            elif event.type == pygame.MOUSEBUTTONUP:
+                match event.button:
+                    case 3:
+                        self.player.defenceSymbol = False
+
 
             elif event.type == pygame.QUIT:
-                GE.GV.set('gameRun',False)
+                GE.GV.set('game_run',False)
 
             elif event.type == pygame.WINDOWRESIZED:
                 #变化windowsize

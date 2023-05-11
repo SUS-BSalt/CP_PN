@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.eventList = []
 
         self.loc = loc
+        self.rect = pygame.Rect(0,0,0,0)
 
         self.faceSide = "r"
         self.frontFoot = "l"
@@ -28,8 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.cameraIsNotCenterSym = False
 
         self.standing = Standing(self)
-        self.standingToLeft = Standing(self)
-        self.standingToLeft.changeFaceSides()
+        self.standingToLeft = Standing(self).changeFaceSides()
 
         self.walking = Walking(self)
         self.walkingToLeft = Walking(self).changeFaceSides()
@@ -37,17 +37,34 @@ class Player(pygame.sprite.Sprite):
         self.cameraMovingSpeedToLeft = -3.25
 
         self.normalAttack = NormalAttack(self)
-        self.normalAttackToLeft = NormalAttack(self)
-        self.normalAttackToLeft.changeFaceSides()
+        self.normalAttackToLeft = NormalAttack(self).changeFaceSides()
 
         self.currentAction = self.standing
-        self.standing.execute()
+        self.standing.beg_execute()
 
         self.redPoint = pygame.image.load("resources\\GFX\\test\\redPoint.png")
         
-
     def init(self):
         self.inputList.clear()
+
+    def locatedPicLoc(self,rectify):
+        self.picLoc = (self.loc[0] - rectify , self.loc[1] - 200)
+
+    def setRect(self, rect):
+        self.rect.update(self.loc[0] - rect[0], self.loc[1] - rect[1], rect[2], rect[3])
+
+    def changePosition(self, x_var, y_var):
+        self.rect[0] += x_var
+        self.rect[1] += y_var
+        #检测碰撞
+        collider = GE.scence.collisionDetection(self)
+        if collider:
+            self.rect[0] -= x_var
+            self.rect[1] -= y_var
+            print("collider!")
+            return 0 
+        self.loc[0] += x_var
+        self.loc[1] += y_var
 
     def cameraTracking(self):
         if self.currentAction == self.standing:
@@ -99,7 +116,7 @@ class Player(pygame.sprite.Sprite):
             
             if self.inputList != []:
                 self.timer = 0
-                self.inputList = self.inputList[-3:]
+                self.inputList = self.inputList[-1:]
 
 
                 self.actionDistributor()
@@ -112,38 +129,36 @@ class Player(pygame.sprite.Sprite):
                 pass
 
             #如果输入列表不为空，执行输入信号，归零计时器，重置动作
-
         GE.camera.draw(self.currentAction.vision,self.currentAction.picLoc)
 
         
     def draw(self):
         GE.camera.draw(self.currentAction.vision,self.currentAction.picLoc)
-
         pass
         
-
-
     def animate(self):
         pass
 
-
     def resetAction(self):
         self.timer = 0
-        if self.rightMoveSymbol == True:
+        if self.defenceSymbol:
+            #进入防御
+            pass
+        elif self.rightMoveSymbol:
             #向右走
             if self.faceSide == "r":
                 #向右走，面向右
-                if self.shiftSymbol == True:
+                if self.shiftSymbol:
                     #向右走，面向右，奔跑
                     pass
                 else:
                     #向右走，面向右，慢走
-                    self.walking.execute()
+                    self.walking.beg_execute()
             else:
                 #向右走，面向左，后退
                 self.faceSide = "l"
                 pass
-        elif self.leftMoveSymbol == True:
+        elif self.leftMoveSymbol:
             #向左走
             if self.faceSide == "r":
                 #向左走，面向右，后退
@@ -156,159 +171,60 @@ class Player(pygame.sprite.Sprite):
                     pass
                 else:
                     #向左走，面向左，慢走
-                    self.walkingToLeft.execute()
+                    self.walkingToLeft.beg_execute()
 
         else:
             #站立
             if self.faceSide == "r":
-                    self.standing.execute()
+                    self.standing.beg_execute()
             else:
-                self.standingToLeft.execute()
+                self.standingToLeft.beg_execute()
 
     def actionDistributor(self):
-        if "a" in self.inputList:
+        if "atk" in self.inputList:
             #攻击
-            self.eventList.append("a")
             if self.faceSide == "r":
                 #向右攻击
-                if self.faceSide == "l":
-                    #向右攻击，面向左，回身攻击
-                    self.normalAttack.execute()
-                    self.faceSide = "r"
-                    pass
-                elif self.leftMoveSymbol == True:
-                    #向右攻击，向左走，后退攻击
-                    pass
-                else:
-                    self.normalAttack.execute()
-                    
-                    #向右攻击，面向右，正常攻击
-                    pass
-                
+                self.normalAttack.beg_execute()
             else:
                 #向左攻击
-                if self.faceSide == "r":
-                    #向左攻击，面向右，回身攻击
-                    self.normalAttackToLeft.execute()
-                    self.faceSide = "l"
-                    pass
-                elif self.rightMoveSymbol:
-                    #向左攻击，向右走，后退攻击
-                    pass
-                else:
-                    self.normalAttackToLeft.execute()
-                    #向左攻击，面向左，正常攻击
-                    pass
-                
-        elif "d" in self.inputList:
+                self.normalAttackToLeft.beg_execute()
+
+        elif "def" in self.inputList:
+                    #好防御
+                    if self.faceSide == "r":
+                        #向右防御
+                        pass
+                    else:
+                        #向左防御
+                        pass
+
+        elif self.defenceSymbol:
             #防御
-            self.eventList.append("d")
             if self.faceSide == "r":
                 #向右防御
                 pass
             else:
                  #向左防御
                  pass
-
-        elif "r" in self.inputList:
+                
+        elif "right" in self.inputList:
             #向右走
             if self.faceSide == "r":
                 #向右走，面向右
-                if self.shiftSymbol == True:
-                    #向右走，面向右，向前冲刺右！
-                    pass
-                else:
-                    #向右走，面向右，慢走
-                    self.walking.execute()
-                    
-                    pass
+                self.walking.beg_execute()
             else:
-                #向右走，鼠标在左
-                if self.faceSide == "r":
-                    self.faceSide = "l"
-                    self.loc[0] -= 25
-                if self.shiftSymbol == True:
-                    #向右走，面向左，向后闪身右！
-                    pass
-                else:
-                    #向右走，面向左，后退
-                    pass
+                #向右走，面向左，后退
+                pass
 
-        elif "l" in self.inputList:
+        elif "left" in self.inputList:
             #向左走
             if self.faceSide == "r":
-                #向左走，面向右
-                if self.shiftSymbol == True:
-                    #向左走，面向右，向后闪身左！
-                    pass
-                else:
-                    #向左走，面向右，后退
-                    pass
+                #向左走，面向右，后退
+                pass
             else:
                 #向左走，鼠标在左
-                if self.shiftSymbol == True:
-                    #向左走，面向左，向前冲刺左！
-                    pass
-                else:
-                    #向左走，面向左，慢走
-                    self.walkingToLeft.execute()
-
-
-        elif "keyUP" in self.inputList:
-            if self.rightMoveSymbol == True:
-                #向右走
-                if self.faceSide == "r":
-                    #向右走，面向右
-                    if self.shiftSymbol == True:
-                        #向右走，面向右，奔跑
-                        pass
-                    else:
-                        #向右走，面向右，慢走
-                        self.walking.execute()
-                else:
-                    #向右走，面向左，后退
-                    self.faceSide = "l"
-                    pass
-            elif self.leftMoveSymbol == True:
-                #向左走
-                if self.faceSide == "r":
-                    #向左走，面向右，后退
-                    pass
-                else:
-                    #向左走，面向左
-                    if self.shiftSymbol == True:
-                        #向左走，面向左，奔跑
-                        pass
-                    else:
-                        #向左走，面向左，慢走
-                        self.walkingToLeft.execute()
-
-            else:
-                #站立
-                self.loc[0] += self.currentAction.movingSteps[-1]
-                if self.faceSide == "r":
-                    self.standing.execute()
-                else:
-                    self.standingToLeft.execute()
-
-        elif "shift" in self.inputList:
-            if self.rightMoveSymbol == True:
-                #向右奔跑
-                pass
-            elif self.leftMoveSymbol == True:
-                #向左奔跑
-                pass
-        
-        elif "shiftUP" in self.inputList:
-            if self.rightMoveSymbol == True:
-                #向右走慢走
-                self.walking.execute()
-
-            elif self.leftMoveSymbol == True:
-                #向左走慢走
-               self.walkingToLeft.execute()
-
-
+                self.walkingToLeft.beg_execute()
 
 
 class NormalAttack:
@@ -317,80 +233,87 @@ class NormalAttack:
 
         self.picSize = (348,200)
         self.picLoc = (0,0)
-        self.picLocRectify = (112,200)
         
         self.frames = tools.getFrames("Character","Nacy","act_Attack")
-        self.act0_FrameList = [1,2,3]
-        self.act0_movingSteps = [0,0,38,100]
-        self.act0_timeStampList = [5,10,20]
-        self.act0_picLocRectify = (112,200)
 
-        self.act1_FrameList = [4,5,6]
-        self.act1_movingSteps = [0,168,0,0]
-        self.act1_timeStampList = [5,10,20]
-        self.act1_picLocRectify = (150,200)
+        self.act0_FrameList = (0,1,2)
+        self.act0_movingSteps = (40,55,0)
+        self.act0_timeStampList = (10,20,40)
+        self.act0_picLocRectify = (125,122,122)
+        self.act0_rect = ((30,147,40,100),(25,144,35,90),(25,144,35,90))
+
+        self.act1_FrameList = (3,4,5)
+        self.act1_movingSteps = (68,113,0)
+        self.act1_timeStampList = (10,20,40)
+        self.act1_picLocRectify = (47,120,120)
+        self.act1_rect = ((15,167,30,110),(40,120,45,70),(40,120,45,70))
 
         self.currentFrame = 0
 
         self.frameList = self.act0_FrameList
         self.movingSteps = self.act0_movingSteps
         self.timeStampList = self.act0_timeStampList
+        self.picLocRectify = self.act0_picLocRectify
+        self.rects = self.act0_rect
 
         self.vision = self.frames[self.frameList[0]]
 
         self.coerciveActingFrame = 10
 
     def locatedPicLoc(self,rectify):
-        self.picLoc = (self.master.loc[0] - rectify[0] , self.master.loc[1] - rectify[1])
+        self.picLoc = (self.master.loc[0] - rectify , self.master.loc[1] - 200)
 
     def init(self):
         self.currentFrame = 0
-        self.vision = self.frames[self.frameList[0]]
 
     def changeFaceSides(self):
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
-        self.act0_movingSteps = [0,0,-38,-100]
-        self.act0_picLocRectify = (self.picSize[0] - self.act0_picLocRectify[0],self.act0_picLocRectify[1])
+        self.act0_movingSteps = (-40,-55,0)
+        self.act0_picLocRectify = (9,76,76)
+        self.act0_rect = ((10,147,40,100),(10,144,35,90),(10,144,35,90))
 
-        self.act1_movingSteps = [0,-168,0,0]
-        self.act1_picLocRectify = (self.picSize[0] - self.act1_picLocRectify[0],self.act1_picLocRectify[1])
+        self.act1_movingSteps = (-68,-113,0)
+        self.act1_picLocRectify = (25,52,52)
+        self.act1_rect = ((15,167,30,110),(5,120,45,70),(5,120,45,70))
+        return self
 
-
-
-    def execute(self):
+    def beg_execute(self):
         self.master.coerciveActingSymbol = True
-        self.master.currentAction = self
-        if self.master.frontFoot == 'l':
-            self.frameList = self.act0_FrameList
-            self.movingSteps = self.act0_movingSteps
-            self.timeStampList = self.act0_timeStampList
-            self.master.frontFoot = 'r'
-            self.locatedPicLoc(self.act0_picLocRectify)
-        else:
+        if self.master.currentAction == self:
             self.frameList = self.act1_FrameList
             self.movingSteps = self.act1_movingSteps
             self.timeStampList = self.act1_timeStampList
-            self.master.frontFoot = 'l'
-            self.locatedPicLoc(self.act1_picLocRectify)
+            self.picLocRectify = self.act1_picLocRectify
+        else:
+            self.frameList = self.act0_FrameList
+            self.movingSteps = self.act0_movingSteps
+            self.timeStampList = self.act0_timeStampList
+            self.picLocRectify = self.act0_picLocRectify
+        self.vision = self.frames[self.frameList[0]]
+        self.master.setRect(self.rects[0])
+        self.master.changePosition(self.movingSteps[0],0)
+        self.locatedPicLoc(self.picLocRectify[0])
         self.init()
+        self.master.currentAction = self
         
     def update(self):
         self.master.timer += 1
 
-        if self.master.timer > self.coerciveActingFrame:
+        if self.master.coerciveActingSymbol \
+            and self.master.timer > self.coerciveActingFrame:
             self.master.coerciveActingSymbol = False
 
         if self.master.timer >= self.timeStampList[-1]:
             self.master.loc[0] += self.movingSteps[-1]
-            
             self.master.resetAction()
+            self.init()
 
         elif self.master.timer >= self.timeStampList[self.currentFrame]:
             self.currentFrame += 1
-
-            self.master.loc[0] += self.movingSteps[self.currentFrame]
-
+            self.master.setRect(self.rects[self.currentFrame])
+            self.master.changePosition(self.movingSteps[self.currentFrame],0)
+            self.locatedPicLoc(self.picLocRectify[self.currentFrame])
             self.vision = self.frames[self.frameList[self.currentFrame]]
 
 
@@ -431,7 +354,7 @@ class Walking:
         self.currentFrame = 0
         pass
 
-    def changeFaceSides(self):
+    def changeFaceSides(self) -> "Walking":
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
         self.act0_picLocRectify = [(self.picSize[0] - n[0],n[1]) for n in self.act0_picLocRectify]
@@ -442,14 +365,14 @@ class Walking:
         self.movingSteps = self.act0_movingSteps
         self.picLocRectify = self.act0_picLocRectify
         self.cameraMovingSpeed *= -1
-
         return self
 
         
-    def execute(self):
+    def beg_execute(self):
         self.master.currentAction = self
         self.master.frontFoot = 'l'
         self.locatedPicLoc(self.picLocRectify[0])
+        self.master.setRect(self.picLoc[0],self.picLoc[1],self.picSize[0],self.picSize[1])
         self.init()
 
     def update(self):
@@ -460,6 +383,7 @@ class Walking:
             self.master.timer = 0
             self.master.loc[0] += self.movingSteps[-1]
             self.locatedPicLoc(self.picLocRectify[-1])
+            self.master.setRect(self.picLoc[0],self.picLoc[1],self.picSize[0],self.picSize[1])
             self.init()
 
         elif self.master.timer >= self.timeStampList[self.currentFrame]:
@@ -467,12 +391,18 @@ class Walking:
             self.currentFrame += 1
 
             self.vision = self.frames[self.frameList[self.currentFrame]]
-
-            self.master.loc[0] += self.movingSteps[self.currentFrame]
+            #检测碰撞
+            if GE.scence.collisionDetection(self.master):
+                pass
+            else:
+                self.master.loc[0] += self.movingSteps[self.currentFrame]
 
             self.locatedPicLoc(self.picLocRectify[self.currentFrame])
-            
+            self.master.setRect(self.picLoc[0],self.picLoc[1],self.picSize[0],self.picSize[1])
+        
 
+class Holding:
+    pass
 
 class Standing:
     def __init__(self, master):
@@ -511,11 +441,14 @@ class Standing:
 
         self.act0_picLocRectify = (self.picSize[0] - self.act0_picLocRectify[0],self.act0_picLocRectify[1])
         self.picLocRectify = self.act0_picLocRectify
+        return self
         
-    def execute(self):
+    def beg_execute(self):
         self.master.currentAction = self
         self.master.frontFoot = 'l'
         self.locatedPicLoc(self.picLocRectify)
+        #self.master.setRect(self.picLoc[0],self.picLoc[1],self.picSize[0],self.picSize[1])
+        
         self.init()
 
     def update(self):

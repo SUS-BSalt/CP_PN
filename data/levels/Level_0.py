@@ -169,6 +169,8 @@ def createFirstScence():
     scence.appendPlane([-640,-360],[2650,1440],tools.getImage("Scence","level_0","light.png"),1)
     scence.appendPlane([600,-360],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.6)
     scence.appendPlane([0,0],[1280,720],tools.getImage("Scence","level_0","talker.png"),0.1)
+    scence.appendCollisionObj(-350,0,100,2000)
+    scence.appendCollisionObj(1700,0,100,2000)
     return scence
 
 def createACTModule():

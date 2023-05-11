@@ -13,6 +13,8 @@ START = "开始";LOAD = "载入";OPTION = "设置";QUIT = "退出"
 
 skip = 'left ctrl'; autoPlay = "a"
 
+left = "a"; right = "d"; shift = "shift"
+
 printSpeed = 0.1
 
 textLineGap = 18

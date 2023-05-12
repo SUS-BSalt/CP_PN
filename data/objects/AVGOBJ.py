@@ -234,7 +234,7 @@ class Reader:
     def __init__(self,AVGModule):
         
         self.master = AVGModule
-        self.currentSentence = self.master.book.readline().strip()
+        self.currentSentence = self.master.book.readline()
         self.currentWord = 0
         
         self.textEffectSwitch = False
@@ -261,7 +261,7 @@ class Reader:
 
 
         except:
-            self.currentSentence = self.master.book.readline().strip()
+            self.currentSentence = self.master.book.readline()
             self.currentWord = 0
             self.master.textBox.currentWordLoc = [self.master.textBox.size[0] + self.master.textBox.margins,
                                                    self.master.textBox.size[1] + self.master.textBox.margins]
@@ -334,9 +334,10 @@ class Reader:
             case _ if self.textEffect[:6] == 'appear':
                 self.textEffect = self.textEffect.split("|")
                 self.master.onStageCharacterList.append(self.master.characterDict[self.textEffect[1]])
+                print(self.master.onStageCharacterList)
             case _ if self.textEffect[:5] == 'leave':
+                self.textEffect = self.textEffect.split("|")
                 self.master.onStageCharacterList.remove(self.master.characterDict[self.textEffect[1]])
-
             case "NEXT":
                 GE.eventList.append("NEXT")
             case 'END':
@@ -478,6 +479,9 @@ class Character:
 
     def setExpression(self, expression):
         self.currentExpression = self.expressionDict[expression]
+
+    def update(self):
+        pass
         
     def draw(self):
         GE.camera.draw_UI(self.currentExpression.vision,self.loc)

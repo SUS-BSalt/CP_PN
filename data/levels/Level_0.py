@@ -48,7 +48,7 @@ class Manager_Level_0:
         self.black_block_loc = [0,420]
         self.black_block_loc_2 = [0,-720]
         self.moduleList.append(self.AVGModule)
-        print(self.moduleList)
+        #print(self.moduleList)
 
     def draw_black_block(self):
         GE.camera.draw_UI(GE.camera.black,self.black_block_loc)
@@ -58,7 +58,6 @@ class Manager_Level_0:
         """从开始的黑屏到简笔画方尖碑"""
         if "NEXT" in GE.eventList:
             print("next")
-            print(GE.scence.objList[0].loc)
             self.moduleList.append(self.scence)
             self.followingEventList.remove(self.check_0)
             self.followingEventList.append(self.check_1)
@@ -74,7 +73,6 @@ class Manager_Level_0:
             self.scence.objList.pop()
             self.followingEventList.remove(self.check_1)
             self.followingEventList.append(self.check_2)
-            print(GE.scence.objList[0].loc)
             GE.eventList.remove("NEXT")
 
     def check_2(self):
@@ -142,7 +140,7 @@ def createAVGModule():
     #（人物）
 
     #（人物）
-    Nacy = AVGOBJ.Character(size=[150,200],loc=[700,270],color = (200,200,200))
+    Nacy = AVGOBJ.Character(size=[150,200],loc=[405,0],color = (200,200,200))
     #（表情1）
     expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Nacy/blank/body.jpg').convert_alpha())
     expressions.eyeSetting([72,51],3,[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],(0,0),(50,100))
@@ -156,11 +154,12 @@ def createAVGModule():
     Nacy.expressionDict["angry"] = expressions
     #（表情2）
     #（表情3）
-    expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Nacy/cute/body.jpg'))
+    expressions = AVGOBJ.Expression(tools.getImage('Character',"Nacy","cute","body.jpg"))
     expressions.eyeSetting([72,51],3,[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],(0,0),(50,100))
     expressions.mouthSetting([88,89],[pygame.image.load("resources/GFX/test/transparent.png").convert_alpha()],[0,0])
     Nacy.expressionDict["cute"] = expressions
     #（表情3）
+    
     Nacy.init()
     Nacy.setExpression("blank")
     module_AVG.characterDict["Nacy"] = Nacy

@@ -4,13 +4,12 @@ picLocRectify (125)(122)(122)(47)(120)(120)
 movingSteps 40,55,0,68,113,0
 rect （30,147,40,100)(25,144,35,90)(25,144,35,90)(15,167,30,110)(40,120,45,70)(40,120,45,70)
 
-self.act1_FrameList = [4,5,6]
-self.act1_movingSteps = [0,168,0,0]
-self.act1_timeStampList = [5,10,20]
-self.act1_picLocRectify = (150,200)
 
 walking:
-(42)(37)(45)(42)
+picLocRectify (42)(37)(45)(42)
+movingSteps （30,30,30,30)
+rect (20,170,30,100)(20,170,30,100)(20,170,30,100)(20,170,30,100)
+
 
 standing:
 (37)(37)

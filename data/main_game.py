@@ -108,7 +108,7 @@ class MainGame:
                  self.fps_Span_Rectify += self.fps_Span_Rectify_var
                  #print(self.fps_Span_Rectify)
             #print(tiemGap)
-            #print(round(1/(self.fps_Span_Rectify_TimeGap)*self.fps_Rectify_Frequency),"FPS")
+            print(round(1/(self.fps_Span_Rectify_TimeGap)*self.fps_Rectify_Frequency),"FPS")
             #print(self.differ_FrameTimer)
             self.fps_Span_Rectify_Timer = self.beg_FrameTimer
             self.fps_Rectify_Timer = 0

@@ -46,11 +46,13 @@ class Manager_Level_0:
         self.followingEventList.append(self.check_0)
         self.followingEventList.append(self.draw_black_block)
         self.black_block_loc = [0,420]
+        self.black_block_loc_2 = [0,-720]
         self.moduleList.append(self.AVGModule)
         print(self.moduleList)
 
     def draw_black_block(self):
         GE.camera.draw_UI(GE.camera.black,self.black_block_loc)
+        GE.camera.draw_UI(GE.camera.black,self.black_block_loc_2)
 
     def check_0(self):
         """从开始的黑屏到简笔画方尖碑"""
@@ -97,7 +99,8 @@ class Manager_Level_0:
         GE.camera.updateCameraLoc((0,3))
         GE.scence.objList[1].loc[1] += 2
         self.AVGModule.textBox.loc[1] += 3
-        self.black_block_loc[1] += 3
+        self.black_block_loc[1] += 2
+        self.black_block_loc_2[1] += 1
         #print(GE.scence.objList[1].loc[0])
         if self.check_3_timer == 100:
             GE.camera.zoomCamera(1)
@@ -168,14 +171,15 @@ def createFirstScence():
     scence = Scence.Scence([2650,1440])
     scence.appendPlane([-640,-360],[2650,1440],tools.getImage("Scence","level_0","light.png"),1)
     scence.appendPlane([600,-360],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.6)
+    scence.appendPlane([1700,552],(142,528),tools.getImage("Scence","level_0","The-Handed-Man.png"),1)
     scence.appendPlane([0,0],[1280,720],tools.getImage("Scence","level_0","talker.png"),0.1)
     scence.appendCollisionObj(-350,0,100,2000)
-    scence.appendCollisionObj(1700,0,100,2000)
+    scence.appendCollisionObj(1750,0,100,2000)
     return scence
 
 def createACTModule():
     module_ACT = ACT_main.ACTModule()
-    module_ACT.setPlayer([680,1020])
+    module_ACT.setPlayer([680,922])
     module_ACT.setBottomUI([0,-1000], [640,720], "data/levels/books/level_0_0.txt")
     return module_ACT
 

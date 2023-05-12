@@ -1,1 +1,2 @@
+Pyinstaller -F -w -i resources\GFX\UI\ONE.ico main.py
 1280x536（92）（628）

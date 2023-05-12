@@ -125,7 +125,7 @@ class AVGModule:
                     return
                 #如果鼠标不在检测区域内，停止函数
             elif event.type == pygame.QUIT:
-                GE.GV.set('gameRun',False)
+                GE.GV.set('game_run',False)
 
             elif event.type == pygame.WINDOWRESIZED:
                 #变化windowsize

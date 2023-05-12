@@ -34,7 +34,7 @@ def controller_noMode():
     #一个仅限于关闭游戏或调整窗口的控制器
     for event in PG.event.get():
         if event.type == PG.QUIT:
-                GE.GV.set('gameRun',False)
+                GE.GV.set('game_run',False)
         elif event.type == PG.WINDOWRESIZED:
             #变化windowsize
             GE.camera.resetWindow(event)

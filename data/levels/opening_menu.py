@@ -68,7 +68,7 @@ def create_OpingMenu():
     openingMenu = UIObj.UIModule()
     #开始菜单
     startMenu = UIObj.Menu(activeSituation=True, loc = [0,0],size=[1280,720])
-    startMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+    startMenu.vision = tools.getImage("UI","StartMenu.png")
     openingMenu.menuList.append(startMenu)
     openingMenu.activeMenu = startMenu
 
@@ -108,7 +108,7 @@ def create_OpingMenu():
         return 0
     #确认退出菜单
     confirmMenu = UIObj.Menu(activeSituation=False)
-    confirmMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+    confirmMenu.vision = tools.getImage("UI","StartMenu.png")
     confirmMenu.masterMenu = startMenu
     openingMenu.menuList.append(confirmMenu)
 
@@ -130,7 +130,7 @@ def create_OpingMenu():
     #载入菜单
     loadMenu = UIObj.Menu(activeSituation=False)
     openingMenu.menuList.append(loadMenu)
-    loadMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+    loadMenu.vision = tools.getImage("UI","StartMenu.png")
     loadMenu.masterMenu = startMenu
     loadMenu.appendButtonToMenu(backToStartMenuMethod,[100,600],[100,50],
                                         GE.UIfont_01.render("返回",False,(0,0,0)),
@@ -141,7 +141,7 @@ def create_OpingMenu():
     #设置菜单
     optionMenu = UIObj.Menu(activeSituation=False)
     openingMenu.menuList.append(loadMenu)
-    optionMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+    optionMenu.vision = tools.getImage("UI","StartMenu.png")
     optionMenu.masterMenu = startMenu
     optionMenu.appendButtonToMenu(backToStartMenuMethod,[100,600],[100,50],
                                         GE.UIfont_01.render("返回",False,(0,0,0)),
@@ -165,7 +165,7 @@ GE.escMenu = escMenuModule
 
 #esc菜单
 escMenu = UIObj.Menu(activeSituation=True,loc=[0,0], size=[1280,720])
-escMenu.vision = PG.image.load(GE.GFX_UI['StartMenu'])
+escMenu.vision = tools.getImage("UI","StartMenu.png")
 escMenuModule.menuList.append(escMenu)
 escMenuModule.activeMenu = escMenu
 print(escMenuModule.activeMenu.loc)

@@ -64,9 +64,9 @@ class Player(pygame.sprite.Sprite):
 
     def cameraTracking(self):
         gap = self.loc[0] - GE.camera.loc[0] - 640
-        if 1 < gap <= 25:
+        if 1 < gap <= 10:
             GE.camera.updateCameraLoc((1,0))
-        elif -25 < gap <= -1:
+        elif -10 < gap <= -1:
             GE.camera.updateCameraLoc((-1,0))  
         elif 25 < gap <= 120:
             GE.camera.updateCameraLoc((3,0))

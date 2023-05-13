@@ -38,3 +38,11 @@ def controller_noMode():
         elif event.type == PG.WINDOWRESIZED:
             #变化windowsize
             GE.camera.resetWindow(event)
+
+def load_all_sfx(directory, accept=('.wav','.mpe','.ogg','.mdi')):
+    effects = {}
+    for fx in os.listdir(directory):
+        name, ext = os.path.splitext(fx)
+        if ext.lower() in accept:
+            effects[name] = PG.mixer.Sound(os.path.join(directory, fx))
+    return effects

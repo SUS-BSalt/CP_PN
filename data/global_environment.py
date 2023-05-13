@@ -4,13 +4,13 @@ from data import setting,tools
 from data.camera import Camera
 import json
 
-#载入资产的位置信息，方便需要时直接读取
-GFX_UI = tools.loadAssetData("resources/GFX/UI/","GFX","UI")
-GFX_test = tools.loadAssetData("resources/GFX/test","GFX","UI")
-#GFX_Character = tools.loadAssetData("resources/GFX/")
+#载入音频
+SFX = tools.load_all_sfx("resources/SFX")
 
+screen = PG.display.set_mode(setting.windowsize,setting.windowflags,8)
+"""游戏窗口"""
 PG.display.set_caption("CP_P")
-PG.display.set_icon(PG.image.load(GFX_UI["icon"]))
+PG.display.set_icon(tools.getImage("UI","ONE.ico"))
 
 class GlobalValue:
     #设置全局变量，一共两个方法，set与get
@@ -29,8 +29,6 @@ class GlobalValue:
 GV = GlobalValue()
 """global value全局变量字典"""
 
-screen = PG.display.set_mode(setting.windowsize,setting.windowflags,8)
-"""游戏窗口"""
 
 
 eventList = []

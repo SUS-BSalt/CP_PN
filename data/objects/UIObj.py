@@ -94,6 +94,7 @@ class Button:
 
     def exec(self):
         self.method()
+        GE.SFX["click"].play()
 
 
     def mouseActiveMethond(self,situation):

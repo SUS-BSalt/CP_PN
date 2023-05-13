@@ -26,8 +26,6 @@ class Player(pygame.sprite.Sprite):
 
         self.timer = 0
 
-        self.cameraIsNotCenterSym = False
-
         self.standing = Standing(self)
         self.standingToLeft = Standing(self).changeFaceSides()
 
@@ -65,18 +63,20 @@ class Player(pygame.sprite.Sprite):
         self.loc[1] += y_var
 
     def cameraTracking(self):
-        if self.currentAction == self.standing:
-            pass
-        elif self.cameraIsNotCenterSym:
-            if self.loc[0] > (GE.camera.loc[0] + 680):
-                GE.camera.updateCameraLoc([15,0])
-            elif self.loc[0] < (GE.camera.loc[0] + 600):
-                GE.camera.updateCameraLoc([-15,0])
-            else:
-                self.cameraIsNotCenterSym = False
+        gap = self.loc[0] - GE.camera.loc[0] - 640
+        if 1 < gap <= 25:
+            GE.camera.updateCameraLoc((1,0))
+        elif 25 < gap <= 120:
+            GE.camera.updateCameraLoc((3,0))
+        elif 120 < gap :
+            GE.camera.updateCameraLoc((10,0))
 
-        elif self.loc[0] > (GE.camera.loc[0] + 800) or self.loc[0] < (GE.camera.loc[0] + 480):
-            self.cameraIsNotCenterSym = True
+        elif -25 < gap <= -1:
+            GE.camera.updateCameraLoc((-1,0))
+        elif -120 < gap <= -25:
+            GE.camera.updateCameraLoc((-3,0))
+        elif gap < -120:
+            GE.camera.updateCameraLoc((-10,0))
 
     def faceSideCheck(self):
         if GE.camera.mousePos[0] >= self.loc[0]:
@@ -384,7 +384,6 @@ class Walking:
             return 0 
         
         self.master.timer += 1
-        GE.camera.updateCameraLoc((self.cameraMovingSpeed,0))
         
         if self.master.timer >= self.timeStampList[-1]:
             self.master.timer = 0

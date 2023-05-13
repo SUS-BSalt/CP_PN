@@ -62,12 +62,14 @@ class Camera:
         
     def executeDrawQuest(self):
         """执行绘制任务"""
-        self.draw_List_Drawing = self.draw_List_Ready
+        GE.scence.update_vision()
+        #更新场景
 
+        self.draw_List_Drawing = self.draw_List_Ready
+        #把已装载好的绘制任务拿过来
         if self.zoomed:
             self.cameraShotScence = pygame.Surface((self.size[0]*self.cameraScaleIndex,self.size[1]*self.cameraScaleIndex))
             self.zoomed = False
-            
         self.cameraShotScence.blits(self.draw_List_Drawing,False)
         if self.cameraScaleIndex != 1:
             self.cameraShot.blit(pygame.transform.scale(self.cameraShotScence,self.size),(0,0))
@@ -75,6 +77,7 @@ class Camera:
             self.cameraShot.blit(self.cameraShotScence,(0,0))
         self.draw_List_Drawing_UI = self.draw_List_Ready_UI
         self.cameraShot.blits(self.draw_List_Drawing_UI,False)
+        
 
 
     def createDrawQuest(self):

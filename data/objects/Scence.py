@@ -29,7 +29,7 @@ class Scence:
         Perspective = PerspectiveObject(loc,size,appearLoc,disappearLoc,flag,vision,movingspeed)
         self.objList.append(Perspective)
 
-    def update(self):
+    def update_vision(self):
         #画面出现跳闪的一个原因便是：只有部分的obj完成更新时，camera的位置改变了，导致之后的obj根据新的loc进行更新
         # 故必须用一个新容器来把传入的loc固定住，因为python语言的特性，传入给函数的值永远是其指针，不能自行控制，真不方便！
         
@@ -39,9 +39,8 @@ class Scence:
             self.tempCameraLocContainer = tuple(GE.camera.loc)
             for obj in self.objList:
                 obj.update(self.tempCameraLocContainer)
-        self.draw()
         
-    def draw(self):
+    def update(self):
         for obj in self.objList:
             GE.camera.draw(obj.vision,obj.loc)
     def animate(self):

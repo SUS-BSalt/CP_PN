@@ -26,7 +26,7 @@ class UIModule:
                 GE.GV.set("click",True)
             
             elif event.type == PG.QUIT:
-                GE.GV.set('gameRun',False)
+                GE.GV.set('game_run',False)
 
             elif event.type == PG.WINDOWRESIZED:
                 #变化windowsize

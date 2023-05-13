@@ -1,5 +1,5 @@
 from data import global_environment as GE
-from data.objects import UIObj
+from data.objects import UIObj,Scence
 from data import setting,tools
 import pygame as PG
 import os,sys
@@ -36,6 +36,8 @@ class Manager_OpeningMenu:
         GE.controller = self.openingMenu.controller
         self.controller = self.openingMenu.controller
         self.followingEventList.append(self.check_jump_to_Level_0)
+
+        GE.scence = Scence.Scence((1280,720))
 
     def check_jump_to_Level_0(self):
         if "jump_to_Level_0" in GE.eventList:

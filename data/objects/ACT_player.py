@@ -68,9 +68,9 @@ class Player(pygame.sprite.Sprite):
             GE.camera.updateCameraLoc((1,0))
         elif -10 < gap <= -1:
             GE.camera.updateCameraLoc((-1,0))  
-        elif 25 < gap <= 120:
+        elif 10 < gap <= 120:
             GE.camera.updateCameraLoc((3,0))
-        elif -120 < gap <= -25:
+        elif -120 < gap <= -10:
             GE.camera.updateCameraLoc((-3,0))        
         elif 120 < gap :
             GE.camera.updateCameraLoc((10,0))
@@ -232,28 +232,36 @@ class NormalAttack:
         self.picLoc = (0,0)
         
         self.frames = tools.getFrames("Character","Nacy","act_Attack")
+        self.sfxs = ("Hu",)
 
-        self.act0_FrameList = (0,1,2)
-        self.act0_movingSteps = (40,55,0)
-        self.act0_timeStampList = (10,20,40)
-        self.act0_picLocRectify = (125,122,122)
+        self.act0_frame_list = (0,1,2)
+        self.act0_gfx_time_stamp = (10,20,40)
+        self.act0_pic_loc_rectify = (125,122,122)                
+        self.act0_moving_steps = (40,55,0)
         self.act0_rect = ((30,147,40,100),(25,144,35,90),(25,144,35,90))
+        self.act0_sfx_list = (0,)
+        self.act0_sfx_time_stamp = (20,100)
 
-        self.act1_FrameList = (3,4,5)
-        self.act1_movingSteps = (68,113,0)
-        self.act1_timeStampList = (10,20,40)
-        self.act1_picLocRectify = (47,120,120)
+        self.act1_frame_list = (3,4,5)
+        self.act1_gfx_time_stamp = (10,20,40)
+        self.act1_pic_loc_rectify = (47,120,120)        
+        self.act1_moving_steps = (68,113,0)
         self.act1_rect = ((15,167,30,110),(40,120,45,70),(40,120,45,70))
+        self.act1_sfx_list = (0,)
+        self.act1_sfx_time_stamp = (20,100)
 
         self.currentFrame = 0
+        self.currentSFXFrame = 0
 
-        self.frameList = self.act0_FrameList
-        self.movingSteps = self.act0_movingSteps
-        self.timeStampList = self.act0_timeStampList
-        self.picLocRectify = self.act0_picLocRectify
+        self.frame_list = self.act0_frame_list
+        self.gfx_time_stamp = self.act0_gfx_time_stamp
+        self.pic_loc_rectify = self.act0_pic_loc_rectify
+        self.moving_steps = self.act0_moving_steps        
         self.rects = self.act0_rect
+        self.sfx_list = self.act0_sfx_list
+        self.sfx_time_stamp = self.act0_sfx_time_stamp
 
-        self.vision = self.frames[self.frameList[0]]
+        self.vision = self.frames[self.frame_list[0]]
 
         self.coerciveActingFrame = 10
 
@@ -262,36 +270,42 @@ class NormalAttack:
 
     def init(self):
         self.currentFrame = 0
+        self.currentSFXFrame = 0
 
     def changeFaceSides(self):
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
-        self.act0_movingSteps = (-40,-55,0)
-        self.act0_picLocRectify = (9,76,76)
+        self.act0_moving_steps = (-40,-55,0)
+        self.act0_pic_loc_rectify = (9,76,76)
         self.act0_rect = ((10,147,40,100),(10,144,35,90),(10,144,35,90))
 
-        self.act1_movingSteps = (-68,-113,0)
-        self.act1_picLocRectify = (25,52,52)
+        self.act1_moving_steps = (-68,-113,0)
+        self.act1_pic_loc_rectify = (25,52,52)
         self.act1_rect = ((15,167,30,110),(5,120,45,70),(5,120,45,70))
         return self
 
     def beg_execute(self):
         self.master.coerciveActingSymbol = True
         if self.master.currentAction == self:
-            self.frameList = self.act1_FrameList
-            self.movingSteps = self.act1_movingSteps
-            self.timeStampList = self.act1_timeStampList
-            self.picLocRectify = self.act1_picLocRectify
+            self.frame_list = self.act1_frame_list
+            self.gfx_time_stamp = self.act1_gfx_time_stamp
+            self.pic_loc_rectify = self.act1_pic_loc_rectify
+            self.moving_steps = self.act1_moving_steps
+            self.sfx_list = self.act1_sfx_list
+            self.sfx_time_stamp = self.act1_sfx_time_stamp                        
         else:
-            self.frameList = self.act0_FrameList
-            self.movingSteps = self.act0_movingSteps
-            self.timeStampList = self.act0_timeStampList
-            self.picLocRectify = self.act0_picLocRectify
+            self.frame_list = self.act0_frame_list
+            self.gfx_time_stamp = self.act0_gfx_time_stamp
+            self.pic_loc_rectify = self.act0_pic_loc_rectify
+            self.moving_steps = self.act0_moving_steps
+            self.sfx_list = self.act0_sfx_list
+            self.sfx_time_stamp = self.act0_sfx_time_stamp
+
         self.master.currentAction = self
-        self.vision = self.frames[self.frameList[0]]
+        self.vision = self.frames[self.frame_list[0]]
         self.master.setRect(self.rects[0])
-        self.master.changePosition(self.movingSteps[0],0)
-        self.locatedPicLoc(self.picLocRectify[0])
+        self.master.changePosition(self.moving_steps[0],0)
+        self.locatedPicLoc(self.pic_loc_rectify[0])
         self.init()
         
     def update(self):
@@ -301,16 +315,20 @@ class NormalAttack:
             and self.master.timer > self.coerciveActingFrame:
             self.master.coerciveActingSymbol = False
 
-        if self.master.timer >= self.timeStampList[-1]:
+        if self.master.timer >= self.gfx_time_stamp[-1]:
             self.master.resetAction()
             self.init()
 
-        elif self.master.timer >= self.timeStampList[self.currentFrame]:
+        elif self.master.timer >= self.gfx_time_stamp[self.currentFrame]:
             self.currentFrame += 1
             self.master.setRect(self.rects[self.currentFrame])
-            self.master.changePosition(self.movingSteps[self.currentFrame],0)
-            self.locatedPicLoc(self.picLocRectify[self.currentFrame])
-            self.vision = self.frames[self.frameList[self.currentFrame]]
+            self.master.changePosition(self.moving_steps[self.currentFrame],0)
+            self.locatedPicLoc(self.pic_loc_rectify[self.currentFrame])
+            self.vision = self.frames[self.frame_list[self.currentFrame]]
+
+        if self.master.timer >= self.sfx_time_stamp[self.currentSFXFrame]:
+            GE.SFX[self.sfxs[self.sfx_list[self.currentSFXFrame]]].play()
+            self.currentSFXFrame += 1
 
 
 class Walking:
@@ -319,27 +337,27 @@ class Walking:
 
         self.picSize = (112,200)
         self.picLoc = (0,0)
-        self.picLocRectify = (22,200)
+        self.pic_loc_rectify = (22,200)
 
         self.frames = tools.getFrames("Character","Nacy","act_Walking")
 
-        self.act0_FrameList = (0,1,2,3)
-        self.act0_timeStampList = (10,20,30,40)
-        #self.act0_timeStampList = [30,60,90,120]
-        self.act0_movingSteps = (30,30,30,30)
-        self.act0_picLocRectify = (42,37,45,42)
+        self.act0_frame_list = (0,1,2,3)
+        self.act0_gfx_time_stamp = (10,20,30,40)
+        #self.act0_gfx_time_stamp = [30,60,90,120]
+        self.act0_moving_steps = (30,30,30,30)
+        self.act0_pic_loc_rectify = (42,37,45,42)
         self.act0_rect = ((20,170,30,100),(20,170,30,100),(20,170,30,100),(20,170,30,100))
         self.cameraMovingSpeed = 3
 
         self.currentFrame = 0
 
-        self.frameList = self.act0_FrameList
-        self.timeStampList = self.act0_timeStampList
-        self.movingSteps = self.act0_movingSteps
-        self.picLocRectify = self.act0_picLocRectify
+        self.frame_list = self.act0_frame_list
+        self.gfx_time_stamp = self.act0_gfx_time_stamp
+        self.moving_steps = self.act0_moving_steps
+        self.pic_loc_rectify = self.act0_pic_loc_rectify
         self.rects = self.act0_rect
 
-        self.vision = self.frames[self.frameList[0]]
+        self.vision = self.frames[self.frame_list[0]]
 
         self.coerciveActingFrame = 0
 
@@ -348,19 +366,19 @@ class Walking:
         self.picLoc = (self.master.loc[0] - rectify , self.master.loc[1] - 200)
 
     def init(self):
-        self.vision = self.frames[self.frameList[0]]
+        self.vision = self.frames[self.frame_list[0]]
         self.currentFrame = 0
         pass
 
     def changeFaceSides(self) -> "Walking":
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
-        self.act0_picLocRectify = (80,85,77,80)
-        self.act0_movingSteps = (-30,-30,-30,-30)
+        self.act0_pic_loc_rectify = (80,85,77,80)
+        self.act0_moving_steps = (-30,-30,-30,-30)
         self.act0_rect = ((10,170,30,100),(10,170,30,100),(10,170,30,100),(10,170,30,100))
     
-        self.movingSteps = self.act0_movingSteps
-        self.picLocRectify = self.act0_picLocRectify
+        self.moving_steps = self.act0_moving_steps
+        self.pic_loc_rectify = self.act0_pic_loc_rectify
         self.rects = self.act0_rect
 
         self.cameraMovingSpeed = -3
@@ -370,10 +388,10 @@ class Walking:
     def beg_execute(self):
 
         self.master.currentAction = self
-        self.vision = self.frames[self.frameList[0]]
+        self.vision = self.frames[self.frame_list[0]]
         self.master.setRect(self.rects[0])
-        self.master.changePosition(self.movingSteps[0],0)
-        self.locatedPicLoc(self.picLocRectify[0])
+        self.master.changePosition(self.moving_steps[0],0)
+        self.locatedPicLoc(self.pic_loc_rectify[0])
         self.init()
 
     def update(self):
@@ -384,20 +402,20 @@ class Walking:
         
         self.master.timer += 1
         
-        if self.master.timer >= self.timeStampList[-1]:
+        if self.master.timer >= self.gfx_time_stamp[-1]:
             self.master.timer = 0
             self.currentFrame = 0
-            self.vision = self.frames[self.frameList[0]]
+            self.vision = self.frames[self.frame_list[0]]
             self.master.setRect(self.rects[0])
-            self.master.changePosition(self.movingSteps[0],0)
-            self.locatedPicLoc(self.picLocRectify[0])
+            self.master.changePosition(self.moving_steps[0],0)
+            self.locatedPicLoc(self.pic_loc_rectify[0])
             
-        elif self.master.timer >= self.timeStampList[self.currentFrame]:
+        elif self.master.timer >= self.gfx_time_stamp[self.currentFrame]:
             self.currentFrame += 1
             self.master.setRect(self.rects[self.currentFrame])
-            self.master.changePosition(self.movingSteps[self.currentFrame],0)
-            self.locatedPicLoc(self.picLocRectify[self.currentFrame])
-            self.vision = self.frames[self.frameList[self.currentFrame]]
+            self.master.changePosition(self.moving_steps[self.currentFrame],0)
+            self.locatedPicLoc(self.pic_loc_rectify[self.currentFrame])
+            self.vision = self.frames[self.frame_list[self.currentFrame]]
 
 class Holding:
     pass
@@ -408,21 +426,21 @@ class Standing:
 
         self.picSize = (70,200)
         self.picLoc = (0,0)
-        self.picLocRectify = (64,200)
+        self.pic_loc_rectify = (64,200)
         
         self.frames = tools.getFrames("Character","Nacy","act_Standing")
 
-        self.act0_FrameList = [0,1]
-        self.act0_timeStampList = [70,140]
-        self.act0_picLocRectify = (64,200)
+        self.act0_frame_list = [0,1]
+        self.act0_gfx_time_stamp = [70,140]
+        self.act0_pic_loc_rectify = (64,200)
 
         self.currentFrame = 0
 
-        self.frameList = self.act0_FrameList
-        self.timeStampList = self.act0_timeStampList
-        self.movingSteps = [0]
+        self.frame_list = self.act0_frame_list
+        self.gfx_time_stamp = self.act0_gfx_time_stamp
+        self.moving_steps = [0]
 
-        self.vision = self.frames[self.frameList[0]]
+        self.vision = self.frames[self.frame_list[0]]
 
         self.coerciveActingFrame = 0
 
@@ -430,20 +448,20 @@ class Standing:
         self.picLoc = (self.master.loc[0] - rectify[0] , self.master.loc[1] - rectify[1])
 
     def init(self):
-        self.vision = self.frames[self.frameList[0]]
+        self.vision = self.frames[self.frame_list[0]]
         self.currentFrame = 0
         pass
 
     def changeFaceSides(self):
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
-        self.act0_picLocRectify = (self.picSize[0] - self.act0_picLocRectify[0],self.act0_picLocRectify[1])
-        self.picLocRectify = self.act0_picLocRectify
+        self.act0_pic_loc_rectify = (self.picSize[0] - self.act0_pic_loc_rectify[0],self.act0_pic_loc_rectify[1])
+        self.pic_loc_rectify = self.act0_pic_loc_rectify
         return self
         
     def beg_execute(self):
         self.master.currentAction = self
-        self.locatedPicLoc(self.picLocRectify)
+        self.locatedPicLoc(self.pic_loc_rectify)
         #self.master.setRect(self.picLoc[0],self.picLoc[1],self.picSize[0],self.picSize[1])
         
         self.init()
@@ -451,9 +469,9 @@ class Standing:
     def update(self):
         self.master.timer += 1
 
-        if self.master.timer >= self.timeStampList[-1]:
+        if self.master.timer >= self.gfx_time_stamp[-1]:
             self.master.timer = 0
             self.init()
-        elif self.master.timer >= self.timeStampList[self.currentFrame]:
+        elif self.master.timer >= self.gfx_time_stamp[self.currentFrame]:
             self.currentFrame += 1
-            self.vision = self.frames[self.frameList[self.currentFrame]]
+            self.vision = self.frames[self.frame_list[self.currentFrame]]

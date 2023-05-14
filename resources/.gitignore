@@ -8,6 +8,9 @@
 *.psd
 *.gif
 *.ogg
+*.wav
+*.prproj
+*.aseprite
 
 # C extensions
 *.so

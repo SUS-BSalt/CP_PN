@@ -18,6 +18,7 @@ class ACTModule:
     
     def setPlayer(self,loc):
         self.player = ACT_player.Player(loc)
+        self.player.setRect((50,100,100,200))
 
     def setBottomUI(self,loc, size, book):
         self.bottomUI = ACT_UI.bottomUI(loc, size, self,open(book,'r',encoding='UTF-8'))
@@ -36,6 +37,9 @@ class ACTModule:
                     
                     case setting.shift:
                         self.player.shiftSymbol = True
+
+                    case setting.interact:
+                        GE.eventList.append("interact")
 
                     
             if event.type == pygame.KEYUP:

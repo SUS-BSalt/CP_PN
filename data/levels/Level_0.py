@@ -13,10 +13,15 @@ def getFrames(num,source):
 class Manager_Level_0:
     def __init__(self):
         self.activeSituation = True
-        self.internalEventList = []
-        self.globalEventList = []
         self.followingEventList = []
         self.moduleList = []
+
+        self.interactive_obj_list = pygame.sprite.Group()
+        #交互物体的组
+        self.current_interactive_obj = None
+        #当前活跃的交互物体，在check_interactive，每帧执行这玩意的update
+        self.player_pre_x_loc = 1000
+        #这个值只要不是玩家初始位置就行，但其实就算是也无非是出点小bug
         
     def update(self):
         for checker in self.followingEventList:
@@ -104,11 +109,22 @@ class Manager_Level_0:
             GE.camera.zoomCamera(1)
             self.followingEventList.remove(self.check_3)
             GE.controller = self.controller = self.ACTModule.controller
-            #self.followingEventList.append(self.check_4)
+            self.followingEventList.append(self.check_interactive)
+            self.interactive_obj_list.add(createInteractiver0())
 
-    def check_4(self):
-        GE.camera.zoomCamera(1)
-        pass
+    def check_interactive(self):
+        if self.current_interactive_obj:
+            #如果当前交互物存在，执行它的update或exec
+            self.current_interactive_obj.update()
+        if "interact" in GE.eventList:
+            if self.current_interactive_obj:
+                self.current_interactive_obj.exec()
+            GE.eventList.remove("interact")
+
+        if self.player_pre_x_loc != self.ACTModule.player.loc[0]:
+            #如果玩家移动，重新检测交互物体
+            self.player_pre_x_loc = self.ACTModule.player.loc[0]
+            self.current_interactive_obj = pygame.sprite.spritecollideany(self.ACTModule.player,self.interactive_obj_list)
     
             
 
@@ -178,11 +194,33 @@ def createFirstScence():
 
 def createACTModule():
     module_ACT = ACT_main.ACTModule()
-    module_ACT.setPlayer([680,922])
+    module_ACT.setPlayer([730,922])
     module_ACT.setBottomUI([0,-1000], [640,720], "data/levels/books/level_0_0.txt")
     return module_ACT
 
-    
+def createInteractiver0():
+    #创建第一个交互物体，用来告诉玩家向左向右
+    interactiver = Scence.Interactiver(500,500,320,1280)
+    interactiver.pic_0 = tools.getImage("UI","A.png")
+    interactiver.pic_1 = tools.getImage("UI","D.png")
+    interactiver.timer = 255
+    def exec():
+        print("yes!")
+        pass
+    def active(interactiver):
+        interactiver.timer -= 1
+        if interactiver.timer == 0:
+            interactiver.kill()
+        interactiver.pic_0.set_alpha(interactiver.timer)
+        interactiver.pic_1.set_alpha(interactiver.timer)
+        GE.camera.draw_UI(interactiver.pic_0,(330,400))
+        GE.camera.draw_UI(interactiver.pic_1,(840,400))
+
+        pass
+    interactiver.set_exec(exec)
+    interactiver.set_active(active)
+    return interactiver
+
 
 manager = Manager_Level_0()
 GE.manager = manager

@@ -263,7 +263,7 @@ class NormalAttack:
 
         self.vision = self.frames[self.frame_list[0]]
 
-        self.coerciveActingFrame = 10
+        self.coerciveActingFrame = 25
 
     def locatedPicLoc(self,rectify):
         self.picLoc = (self.master.loc[0] - rectify , self.master.loc[1] - 200)

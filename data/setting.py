@@ -9,11 +9,11 @@ windowflags = (pygame.RESIZABLE|pygame.DOUBLEBUF)#可调节窗口大小的模式
 
 START = "开始";LOAD = "载入";OPTION = "设置";QUIT = "退出"
 
-
-
 skip = 'left ctrl'; autoPlay = "a"
 
-left = "a"; right = "d"; shift = "shift"
+left = "a"; right = "d"; shift = "shift"; interact = "e"
+
+
 
 printSpeed = 0.1
 

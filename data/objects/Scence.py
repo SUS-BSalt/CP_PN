@@ -149,3 +149,18 @@ class Collider(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+class Interactiver(pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((width, height)).convert()
+        #self.image.fill(c.RED)
+        self.rect = pygame.Rect(x, y, width, height)
+        self.rect.x = x
+        self.rect.y = y
+    def set_exec(self,method):
+        self.exec = method
+    def set_active(self,method):
+        self.active = method
+    def update(self):
+        self.active(self)

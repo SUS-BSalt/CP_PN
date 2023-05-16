@@ -9,6 +9,7 @@ class Scence:
         self.tempCameraLocContainer = (0,0)
         self.activeSituation = True
         self.collisionObjGroup = pygame.sprite.Group()
+        self.interactiveObjGroup = pygame.sprite.Group()
     def init(self,cameraLoc):
         for obj in self.objList:
             obj.init(cameraLoc)
@@ -158,9 +159,10 @@ class Interactiver(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, width, height)
         self.rect.x = x
         self.rect.y = y
-    def set_exec(self,method):
-        self.exec = method
-    def set_active(self,method):
-        self.active = method
+    
     def update(self):
-        self.active(self)
+        pass
+    def exec(self):
+        pass
+    def dying(self):
+        pass

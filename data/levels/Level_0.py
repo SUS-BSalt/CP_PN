@@ -33,6 +33,7 @@ class Manager_Level_0:
         self.controller = self.AVGModule.controller
 
         self.scence =GE.scence = createFirstScence()
+        self.scence_1 = createSecondScence()
         #self.scence = GE.scence
         
         self.ACTModule = createACTModule()
@@ -99,6 +100,21 @@ class Manager_Level_0:
             GE.camera.zoomCamera(1)
             self.followingEventList.remove(self.check_3)
             GE.controller = self.controller = self.ACTModule.controller
+            
+            self.followingEventList.append(self.check_4)
+        
+    def check_4(self):
+        """玩家做出选择"""
+        if "jump_to_01" in GE.eventList:
+            self.followingEventList.remove(self.draw_black_block)
+            self.moduleList.remove(self.scence)
+            self.scence = GE.scence = self.scence_1
+            self.moduleList.insert(1,self.scence)
+            GE.camera.loc = [0,0]
+            self.ACTModule.player.loc = [100,420]
+            self.ACTModule.interactive_obj_list = pygame.sprite.Group()
+            GE.eventList.remove("jump_to_01")
+
 
 def createAVGModule():
     #（创建模块）
@@ -151,7 +167,27 @@ def createFirstScence():
     return scence
 
 def createSecondScence():
-    
+    scence = Scence.Scence([3000,420])
+    scence.appendPlane([0,0],(1280,720),tools.getImage("Scence","level_0","backGround_0.png"),0)
+    scence.appendPlane([180,0],(1280,720),tools.getImage("Scence","level_0","mid_2.png"),0.2)
+    scence.appendPlane([600,0],(1280,720),tools.getImage("Scence","level_0","mid_3.png"),0.3)
+    scence.appendPlane([500,0],(108,361),tools.getImage("Scence","level_0","02_11.png"),0.55)
+    scence.appendPlane([0,0],(538,188),tools.getImage("Scence","level_0","02_1.png"),0.95)
+    scence.appendPerspective([538,0],(461,361),[0,0],[1178,0],"right",tools.getImage("Scence","level_0","02_2.png"),0.95)
+    scence.appendPerspective([961,115],(188,245),[341,188],[1610,188],"right",tools.getImage("Scence","level_0","01_2.png"),1)
+    scence.appendPerspective([1221,166],(118,195),[-158,188],[600,188],"left",tools.getImage("Scence","level_0","04_0.png"),1)
+    scence.appendPlane([940,228],(252,133),tools.getImage("Scence","level_0","03_1.png"),0.95)
+    scence.appendPlane([0,118],(981,243),tools.getImage("Scence","level_0","01_1.png"),1)
+    scence.appendPerspective([1667,-37],(722,397),[1027,0],[2389,0],"right",tools.getImage("Scence","level_0","04_2.png"),1)
+    scence.appendPlane([1480,0],(543,361),tools.getImage("Scence","level_0","wall_05.png"),0.31)
+    scence.appendPlane([1350,145],(179,215),tools.getImage("Scence","level_0","combine_01.png"),0.7)
+    scence.appendPlane([1700,137],(175,224),tools.getImage("Scence","level_0","combine_02.png"),0.5)
+    scence.appendPlane([2300,273],(255,87), tools.getImage("Scence","level_0","combine_03.png"),0.8)
+    scence.appendPlane([1220,-35],(447,397),tools.getImage("Scence","level_0","04_1.png"),1)
+
+    scence.appendCollisionObj(-100,0,100,2000)
+    scence.appendCollisionObj(2300,0,100,2000)
+    return scence
 
 def createACTModule():
     module_ACT = ACT_main.ACTModule()

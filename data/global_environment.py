@@ -40,11 +40,11 @@ controller = tools.controller_noMode
 camera = Camera()
 """摄像机，包括了绘制任务的创建与执行，获取鼠标位置，跟随窗口大小调整画面等功能"""
 
-UIfont_01 = PG.font.Font(setting.charType,40)
-UIfont_02 = PG.font.Font(setting.charType,50)
+UIfont_01 = PG.font.Font(setting.charType,50)
+UIfont_02 = PG.font.Font(setting.charType,40)
 UIfont_03 = PG.font.Font(setting.charType,30)
-UIfont_04 = PG.font.Font(setting.charType,20)
-UIfont_05 = PG.font.Font(setting.charType,40)
+UIfont_04 = PG.font.Font(setting.charType,25)
+UIfont_05 = PG.font.Font(setting.charType,10)
 """一些预设字体"""
 
 manager = None

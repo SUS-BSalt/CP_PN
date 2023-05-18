@@ -2,14 +2,6 @@ from data import global_environment as GE,tools
 from data.objects import AVGOBJ,Scence,ACT_main,ACT_NPC
 import pygame
 
-def getFrames(num,source):
-    temp = []
-    for i in range(num):
-        address = source+'%d'%(i+1)+'.png'
-        temp.append(pygame.image.load(address).convert_alpha())
-    return temp
-
-
 class Manager_Level_0:
     def __init__(self):
         self.activeSituation = True
@@ -120,19 +112,7 @@ def createAVGModule():
     #(创建logsBox)
     module_AVG.setLogsBox([0,0], [1280,720], 300, tools.getImage("UI","Logs.png"))
     #(创建logsBox)
-    #（人物）
-    satmic = AVGOBJ.Character(size=[150,200],loc=[600,70],color = (200,200,200))
-    #（表情1）
-    expressions = AVGOBJ.Expression(pygame.image.load('resources/GFX/Character/Satmic/body.png').convert())
-    expressions.eyeSetting([72,51],3,getFrames(3,"resources/GFX/Character/Satmic/eye/"))
-    expressions.mouthSetting([88,89],getFrames(4,"resources/GFX/Character/Satmic/mouth/"))
-    satmic.expressionDict["blank"] = expressions
-    #（表情1）
-    satmic.init()
-    satmic.setExpression("blank")
-    module_AVG.characterDict["Satmic"] = satmic
-    #（人物）
-
+    
     #（人物）
     Nacy = AVGOBJ.Character(size=[150,200],loc=[405,0],color = (200,200,200))
     #（表情1）
@@ -170,6 +150,9 @@ def createFirstScence():
     scence.appendCollisionObj(1750,0,100,2000)
     return scence
 
+def createSecondScence():
+    
+
 def createACTModule():
     module_ACT = ACT_main.ACTModule()
     module_ACT.setPlayer([730,922])
@@ -178,8 +161,6 @@ def createACTModule():
     module_ACT.interactive_obj_list.add(ACT_NPC.Operation_instructions((500,500,320,1280)))
     module_ACT.interactive_obj_list.add(ACT_NPC.handle_man_choice((1650,500,200,600)))
     return module_ACT
-
-    
 
 
 manager = Manager_Level_0()

@@ -77,25 +77,25 @@ def create_OpingMenu():
         
 
     startMenu.appendButtonToMenu(startMethod,[100,150],[100,50],
-                                    GE.UIfont_01.render(setting.START,False,(0,0,0)),
-                                    GE.UIfont_02.render(setting.START,False,(0,0,0))
+                                    GE.UIfont_02.render(setting.START,False,(0,0,0)),
+                                    GE.UIfont_03.render(setting.START,False,(0,0,0))
                                 )
     def loadMethod():
         openingMenu.activeMenu = loadMenu
     startMenu.appendButtonToMenu(loadMethod,[100,300],[100,50],
-                                        GE.UIfont_01.render(setting.LOAD,False,(0,0,0)),
-                                        GE.UIfont_02.render(setting.LOAD,False,(0,0,0))
+                                        GE.UIfont_02.render(setting.LOAD,False,(0,0,0)),
+                                        GE.UIfont_03.render(setting.LOAD,False,(0,0,0))
                                 )
     def optionMethod():
         openingMenu.activeMenu = optionMenu
     startMenu.appendButtonToMenu(optionMethod,[100,450],[100,50],
-                                        GE.UIfont_01.render(setting.OPTION,False,(0,0,0)),
-                                        GE.UIfont_02.render(setting.OPTION,False,(0,0,0)))
+                                        GE.UIfont_02.render(setting.OPTION,False,(0,0,0)),
+                                        GE.UIfont_03.render(setting.OPTION,False,(0,0,0)))
     def confirmMenuMethod():
         openingMenu.activeMenu = confirmMenu
     startMenu.appendButtonToMenu(confirmMenuMethod,[100,600],[100,50],
-                                        GE.UIfont_01.render(setting.QUIT,False,(0,0,0)),
-                                        GE.UIfont_02.render(setting.QUIT,False,(0,0,0)))
+                                        GE.UIfont_02.render(setting.QUIT,False,(0,0,0)),
+                                        GE.UIfont_03.render(setting.QUIT,False,(0,0,0)))
 
     #开始菜单
     def backToStartMenuMethod():
@@ -113,17 +113,17 @@ def create_OpingMenu():
     openingMenu.menuList.append(confirmMenu)
 
     confirmMenu.appendButtonToMenu(exitMethod,[500,350],[100,50],
-                                        GE.UIfont_01.render("是",False,(0,0,0)),
-                                        GE.UIfont_02.render("是",False,(0,0,0))
+                                        GE.UIfont_02.render("是",False,(0,0,0)),
+                                        GE.UIfont_03.render("是",False,(0,0,0))
                                     )
 
     confirmMenu.appendButtonToMenu(backToStartMenuMethod,[700,350],[100,50],
-                                        GE.UIfont_01.render("否",False,(0,0,0)),
-                                        GE.UIfont_02.render("否",False,(0,0,0))
+                                        GE.UIfont_02.render("否",False,(0,0,0)),
+                                        GE.UIfont_03.render("否",False,(0,0,0))
                                     )
     confirmMenu.appendButtonToMenu(noneMethod,[400,250],[100,50],
-                                        GE.UIfont_01.render("确认退出到桌面？",False,(0,0,0)),
-                                        GE.UIfont_01.render("确认退出到桌面？",False,(0,0,0))
+                                        GE.UIfont_02.render("确认退出到桌面？",False,(0,0,0)),
+                                        GE.UIfont_03.render("确认退出到桌面？",False,(0,0,0))
                                     )
     #确认退出菜单#
 
@@ -133,8 +133,8 @@ def create_OpingMenu():
     loadMenu.vision = tools.getImage("UI","StartMenu.png")
     loadMenu.masterMenu = startMenu
     loadMenu.appendButtonToMenu(backToStartMenuMethod,[100,600],[100,50],
-                                        GE.UIfont_01.render("返回",False,(0,0,0)),
                                         GE.UIfont_02.render("返回",False,(0,0,0)),
+                                        GE.UIfont_03.render("返回",False,(0,0,0)),
                                     )
     #载入菜单#
 
@@ -144,8 +144,8 @@ def create_OpingMenu():
     optionMenu.vision = tools.getImage("UI","StartMenu.png")
     optionMenu.masterMenu = startMenu
     optionMenu.appendButtonToMenu(backToStartMenuMethod,[100,600],[100,50],
-                                        GE.UIfont_01.render("返回",False,(0,0,0)),
                                         GE.UIfont_02.render("返回",False,(0,0,0)),
+                                        GE.UIfont_03.render("返回",False,(0,0,0)),
                                     )
     #设置菜单#
     return openingMenu
@@ -176,8 +176,8 @@ def backMethod():
     GE.manager = GE.level_manager
 
 escMenu.appendButtonToMenu(backMethod,[100,450],[150,80],
-                                    GE.UIfont_01.render("返回游戏",False,(0,0,0)),
-                                    GE.UIfont_02.render("返回游戏",False,(0,0,0))
+                                    GE.UIfont_02.render("返回游戏",False,(0,0,0)),
+                                    GE.UIfont_03.render("返回游戏",False,(0,0,0))
                                 )
 
 def backToOpeningMenu():
@@ -186,7 +186,7 @@ def backToOpeningMenu():
     os.execl(sys.executable,sys.executable,"./main.py")
     
 escMenu.appendButtonToMenu(backToOpeningMenu,[100,600],[150,80],
-                                    GE.UIfont_01.render("返回主菜单",False,(0,0,0)),
-                                    GE.UIfont_02.render("返回主菜单",False,(0,0,0))
+                                    GE.UIfont_02.render("返回主菜单",False,(0,0,0)),
+                                    GE.UIfont_03.render("返回主菜单",False,(0,0,0))
                                 )
     

@@ -21,7 +21,9 @@ class AVGModule:
         self.skipSwitch = False
         """快进的标志"""
 
-        self.eventList = []
+        self.cursor = pygame.Surface((5,30))
+        self.cursor.fill((255,255,255))
+        self.cursor_timer = 0
 
         self.clickArea = [0,0,0,0]
 
@@ -85,8 +87,9 @@ class AVGModule:
                         GE.controller = GE.escMenu.controller
                         GE.manager = GE.escMenu
                         #print(GE.level_manager.moduleList)
-                        #print(GE.camera.loc)
+                        print(GE.camera.loc)
                         print(GE.scence.objList[0])
+
 
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -221,8 +224,15 @@ class AVGModule:
         if self.logsBox.activeSituation == True:
             GE.camera.draw_UI(self.logsBox.vision, self.logsBox.loc)
 
+        #光标
+        self.cursor_timer += 1
+        if self.cursor_timer < 25:   
+            GE.camera.draw_UI(self.cursor, (self.textBox.loc[0] + self.textBox.currentWordLoc[0]+10,self.textBox.loc[1] + self.textBox.currentWordLoc[1]))
+        elif self.cursor_timer < 50:
+            pass
+        else:
+            self.cursor_timer = 0
         
-
     def animate(self):
         for character in self.onStageCharacterList:
             if character.activeSituation == True:
@@ -263,8 +273,6 @@ class Reader:
         except:
             self.currentSentence = self.master.book.readline()
             self.currentWord = 0
-            self.master.textBox.currentWordLoc = [self.master.textBox.size[0] + self.master.textBox.margins,
-                                                   self.master.textBox.size[1] + self.master.textBox.margins]
             self.master.workingSituation = False
             self.master.logsBox.textVisionList.insert(0,self.master.textBox.vision)
             for character in self.master.characterDict:
@@ -404,7 +412,6 @@ class TextBox:
         if self.currentWordLoc[0] >= self.textLineCutLineLoc:
             self.wrapText()
 
-
 class LogsBox:
     """在每次刷新textBox的vision之前，将其copy一份扔到textVisionList里"""
     def __init__(self,loc = [0,0], size = [10,10], textBoxHeight = 0 ):
@@ -455,7 +462,6 @@ class LogsBox:
                 elif currentTextLoc < -self.textBoxHeight :
                     break
             self.vision = self.tempVision.copy()
-
 
 class Character:
     """你需要先创建表情Expression，并添加进expressionList里"""
@@ -521,7 +527,6 @@ class Expression:
         #可能一个是否眨眼的判断
         #self.vision = self.frameList[0].copy()
         self.eyes.animate()
-
 
 class Eye:
     def __init__(self, loc, eyesBlinkGap, frameList, framePlayList, timeStampList):

@@ -22,7 +22,7 @@ class Operation_instructions(pygame.sprite.Sprite):
             pass
         else:
             self.dyingSym = True
-        GE.camera.draw(self.pic_0,(400,720))
+        GE.camera.draw(self.pic_0,(265,720))
         GE.camera.draw(self.pic_1,(940,720))
     def exec(self):
         pass

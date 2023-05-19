@@ -159,7 +159,7 @@ def createAVGModule():
 def createFirstScence():
     scence = Scence.Scence([2650,1440])
     scence.appendPlane([-640,-360],[2650,1440],tools.getImage("Scence","level_0","light.png"),1)
-    scence.appendPlane([600,-360],[93,451],tools.getImage("Scence","level_0","obelisk.png"),0.6)
+    scence.appendPlane([550,-360],[140,676],tools.getImage("Scence","level_0","obelisk.png"),0.6)
     scence.appendPlane([1700,552],(142,528),tools.getImage("Scence","level_0","The-Handed-Man.png"),1)
     scence.appendPlane([0,0],[1280,720],tools.getImage("Scence","level_0","talker.png"),0.1)
     scence.appendCollisionObj(-350,0,100,2000)
@@ -191,7 +191,7 @@ def createSecondScence():
 
 def createACTModule():
     module_ACT = ACT_main.ACTModule()
-    module_ACT.setPlayer([730,922])
+    module_ACT.setPlayer([640,922])
     module_ACT.setBottomUI([0,-1000], [640,720], "data/levels/books/level_0_0.txt")
 
     module_ACT.interactive_obj_list.add(ACT_NPC.Operation_instructions((500,500,320,1280)))

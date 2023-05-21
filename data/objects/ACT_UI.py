@@ -3,7 +3,7 @@ from random import randint
 import pygame
 
 class bottomUI:
-    def __init__(self,size,loc,ACTModule,book):
+    def __init__(self,loc ,size ,ACTModule,book):
         self.master = ACTModule
         self.workingSituation = True
 

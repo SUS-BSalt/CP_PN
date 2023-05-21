@@ -1,2 +1,3 @@
 Pyinstaller -F -w -i resources\GFX\UI\ONE.ico main.py
-1280x536（92）（628）
+1280x536（92）（628）电影感长宽比
+1280x420 1280x300

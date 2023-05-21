@@ -23,11 +23,12 @@ class Scence:
 
     
     def appendPlane(self,loc,size,vision,movingSpeed):
-        plane = Plane(loc,size,vision,movingSpeed)
+        plane = Plane([loc[0],self.size[1] - loc[1] - size[1]],size,vision,movingSpeed)
+        print("loc",plane.loc)
         self.objList.append(plane)
     
-    def appendPerspective(self,loc,size,appearLoc,disappearLoc,flag,vision,movingspeed):
-        Perspective = PerspectiveObject(loc,size,appearLoc,disappearLoc,flag,vision,movingspeed)
+    def appendPerspective(self,loc,size,flag,vision,movingspeed):
+        Perspective = PerspectiveObject([loc[0],self.size[1] - loc[1] - size[1]],size,flag,vision,movingspeed)
         self.objList.append(Perspective)
 
     def update_vision(self):
@@ -71,20 +72,21 @@ class Plane:
 
 
 class PerspectiveObject:
-    def __init__(self,loc,size,appearLoc,disappearLoc,flag,vision,movingspeed):
+    def __init__(self,loc,size,flag,vision,movingspeed):
         self.loc = loc
         self.org_loc = tuple(loc)
         self.size = size
         self.movingSpeed = movingspeed
-
-        self.appearLoc = appearLoc
-        self.disappearLoc = disappearLoc
-        self.theCameraMovingDistanceThenTheObjAppearOnScreen = self.disappearLoc[0] - self.appearLoc[0]
-        
+     
         self.scaleIndex = 1
         self.vision = vision
         self.org_vision = vision
         self.blitLoc = [0,0]
+
+        #复杂的计算，所需的参数
+        self.mut_0 = self.loc[0]+640
+        """这里的640指的是摄像机一半的尺寸"""
+        self.mut_1 = self.loc[1]+1280
 
         if flag == "right":
             self.blitLoc = self.loc
@@ -99,16 +101,16 @@ class PerspectiveObject:
     def init(self,cameraLoc):
         pass
     def initRightSide(self,cameraLoc):
-        if cameraLoc[0] < self.appearLoc[0]:
+        if cameraLoc[0] < self.loc[0] - 640:
             self.vision = pygame.transform.scale(self.org_vision, (0,self.size[1]))
-        elif cameraLoc[0] > self.disappearLoc[0]:
+        elif cameraLoc[0] > self.loc[0] + self.size[0]:
             self.vision = self.org_vision
         else:
             self.updateMethodForRight(cameraLoc)
     def initLeftSide(self,cameraLoc):
-        if cameraLoc[0] < self.appearLoc[0]:
+        if cameraLoc[0] < self.loc[0] - self.mut_1:
             self.vision = self.org_vision 
-        elif cameraLoc[0] > self.disappearLoc[0]:
+        elif cameraLoc[0] > self.loc[0] - 640:
             self.vision = pygame.transform.scale(self.org_vision, (0,self.size[1]))
         else:
             self.updateMethodForLeft(cameraLoc)
@@ -125,18 +127,27 @@ class PerspectiveObject:
         pass
     
     def updateMethodForRight(self,cameraLoc):
+        #引入一个depth的概念，意义为这个片面垂直于镜头，它最远点到摄像机平面的距离
+        #depth实际上与图片宽度无关，图片宽度是假设当片面刚好消失在镜头里时，片面通过透视投影到摄像机平面的宽度
+        #当摄像机的焦距等于摄像机屏幕宽度一半时，图片的宽度在数值上等于这个depth
+        #为了简化计算，以下所有计算都是基于摄像机的焦距等于摄像机屏幕宽度一半，也就是图片的宽度在数值上等于这个depth的情况下进行的
+        #当摄像机位置减去物体位置大于等于depth（图片宽度）时，图像不需要拉伸，缩放比为100%
+        #当摄像机位置减去物体位置小于等于摄像机宽度一半的负数，也就是平面中心正好怼在物体位置上时，片面就看不见了，所以缩放比为0%
+        #故缩放比为摄像机位置减去物体位置的数值结果在depth到摄像机宽度一半的负数之间的差值
         self.loc[0] = cameraLoc[0]*(1-self.movingSpeed) + self.org_loc[0]
-        if cameraLoc[0] < self.appearLoc[0] or cameraLoc[0] > self.disappearLoc[0]:
+        if cameraLoc[0] < self.loc[0] - 640 or cameraLoc[0] > self.loc[0] + self.size[0]:
+            #这里的640指的是摄像机尺寸的一半
+            #若摄像机位置在上述条件之内时，物体不可能出现在场景中，所以不用更新它
             return
-        self.scaleIndex=(cameraLoc[0]-self.appearLoc[0])/self.theCameraMovingDistanceThenTheObjAppearOnScreen
+        self.scaleIndex=(cameraLoc[0]-self.loc[0] + 640)/self.mut_0
         self.vision = pygame.transform.scale(self.org_vision, (self.size[0]*self.scaleIndex,self.size[1]))
         
 
     def updateMethodForLeft(self,cameraLoc):
         self.loc[0] = cameraLoc[0]*(1-self.movingSpeed) + self.org_loc[0]
-        if cameraLoc[0] < self.appearLoc[0] or cameraLoc[0] > self.disappearLoc[0]:
+        if self.loc[0] - cameraLoc[0] > self.mut_1 or self.loc[0] - cameraLoc[0] < 640:
             return
-        self.scaleIndex=(self.disappearLoc[0] - cameraLoc[0])/self.theCameraMovingDistanceThenTheObjAppearOnScreen
+        self.scaleIndex=(self.loc[0] - cameraLoc[0] - 640)/self.mut_0
         self.vision = pygame.transform.scale(self.org_vision, (self.size[0]*self.scaleIndex,self.size[1]))
         self.blitLoc = (self.loc[0] - self.size[0]*self.scaleIndex,self.loc[1])
 

@@ -2,6 +2,7 @@ import pygame as PG
 import os
 import json
 from data import global_environment as GE
+from data.objects import Scence
 
 def getFrames(*path) -> list:
     truePath = "resources/GFX"
@@ -46,3 +47,16 @@ def load_all_sfx(directory, accept=('.wav','.mpe','.ogg','.mdi')):
         if ext.lower() in accept:
             effects[name] = PG.mixer.Sound(os.path.join(directory, fx))
     return effects
+
+def load_scence(jsonpath,gfxpath,scence_size):
+    scence = Scence.Scence(scence_size)
+    dir = json.load(open(jsonpath))
+    for i in dir:
+        match dir[i][0]:
+            case 0 :
+                scence.appendPlane(dir[i][1],dir[i][2],getImage("Scence",gfxpath,i),dir[i][3])
+            case 1 :
+                scence.appendPerspective(dir[i][1],dir[i][2],dir[i][3],getImage("Scence",gfxpath,i),dir[i][4])
+            case 2 :
+                scence.appendCollisionObj(dir[i][1],dir[i][2],dir[i][3],dir[i][4])
+    return scence

@@ -223,15 +223,12 @@ class AVGModule:
             character.draw()
         if self.logsBox.activeSituation == True:
             GE.camera.draw_UI(self.logsBox.vision, self.logsBox.loc)
-
-        #光标
-        self.cursor_timer += 1
-        if self.cursor_timer < 25:   
+        if self.workingSituation == False:
+            #光标
             GE.camera.draw_UI(self.cursor, (self.textBox.loc[0] + self.textBox.currentWordLoc[0]+10,self.textBox.loc[1] + self.textBox.currentWordLoc[1]))
-        elif self.cursor_timer < 50:
-            pass
-        else:
-            self.cursor_timer = 0
+        
+
+        
         
     def animate(self):
         for character in self.onStageCharacterList:
@@ -239,6 +236,13 @@ class AVGModule:
                 character.currentExpression.mouthAct()       
         if self.logsBox.activeSituation == True:
             self.logsBox.animate()
+        
+        self.cursor_timer += 1  
+        if self.cursor_timer == 25:   
+            self.cursor.fill((0,0,0))
+        elif self.cursor_timer == 50:
+            self.cursor.fill((255,255,255))
+            self.cursor_timer = 0
 
 class Reader:
     def __init__(self,AVGModule):

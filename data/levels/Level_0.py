@@ -32,7 +32,8 @@ class Manager_Level_0:
         GE.controller = self.AVGModule.controller
         self.controller = self.AVGModule.controller
 
-        self.scence =GE.scence = createFirstScence()
+        self.scence =GE.scence = tools.load_scence("data/levels/scence/s-0-0.json","level_0",[2650,1440])#createFirstScence()
+        GE.camera.loc = [-640,0]
         self.scence_1 = createSecondScence()
         #self.scence = GE.scence
         
@@ -112,6 +113,7 @@ class Manager_Level_0:
             self.moduleList.insert(1,self.scence)
             GE.camera.loc = [0,0]
             self.ACTModule.player.loc = [100,420]
+            self.ACTModule.bottomUI.loc[1]=420
             self.ACTModule.interactive_obj_list = pygame.sprite.Group()
             GE.eventList.remove("jump_to_01")
 
@@ -161,12 +163,19 @@ def createFirstScence():
     scence.appendPlane([-640,-360],[2650,1440],tools.getImage("Scence","level_0","light.png"),1)
     scence.appendPlane([550,-360],[140,676],tools.getImage("Scence","level_0","obelisk.png"),0.6)
     scence.appendPlane([1700,552],(142,528),tools.getImage("Scence","level_0","The-Handed-Man.png"),1)
+    scence.appendPerspective([538,700],(461,361),"right",tools.getImage("Scence","level_0","02_2.png"),0.95)
+    scence.appendPerspective([1221,700],(188,195),"left",tools.getImage("Scence","level_0","04_0.png"),1)
+    
     scence.appendPlane([0,0],[1280,720],tools.getImage("Scence","level_0","talker.png"),0.1)
     scence.appendCollisionObj(-350,0,100,2000)
     scence.appendCollisionObj(1750,0,100,2000)
     return scence
 
 def createSecondScence():
+    scence = Scence.Scence([3000,420])
+    scence.appendPlane([0,0],(1280,720),tools.getImage("Scence","level_0","backGround_0.png"),0)
+
+def createSecondScence_0():
     scence = Scence.Scence([3000,420])
     scence.appendPlane([0,0],(1280,720),tools.getImage("Scence","level_0","backGround_0.png"),0)
     scence.appendPlane([180,0],(1280,720),tools.getImage("Scence","level_0","mid_2.png"),0.2)
@@ -191,7 +200,7 @@ def createSecondScence():
 
 def createACTModule():
     module_ACT = ACT_main.ACTModule()
-    module_ACT.setPlayer([640,922])
+    module_ACT.setPlayer([0,922])
     module_ACT.setBottomUI([0,-1000], [640,720], "data/levels/books/level_0_0.txt")
 
     module_ACT.interactive_obj_list.add(ACT_NPC.Operation_instructions((500,500,320,1280)))

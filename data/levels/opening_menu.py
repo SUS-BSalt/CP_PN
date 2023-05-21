@@ -37,7 +37,7 @@ class Manager_OpeningMenu:
         self.controller = self.openingMenu.controller
         self.followingEventList.append(self.check_jump_to_Level_0)
 
-        GE.scence = Scence.Scence((1280,720))
+        GE.scence = Scence.Scence((1280,720),GE.camera.loc)
 
     def check_jump_to_Level_0(self):
         if "jump_to_Level_0" in GE.eventList:

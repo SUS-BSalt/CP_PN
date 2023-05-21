@@ -49,7 +49,7 @@ def load_all_sfx(directory, accept=('.wav','.mpe','.ogg','.mdi')):
     return effects
 
 def load_scence(jsonpath,gfxpath,scence_size):
-    scence = Scence.Scence(scence_size)
+    scence = Scence.Scence(scence_size,GE.camera.loc)
     dir = json.load(open(jsonpath))
     for i in dir:
         match dir[i][0]:

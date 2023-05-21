@@ -3,10 +3,10 @@ from data import global_environment as GE
 
 
 class Scence:
-    def __init__(self,size):
+    def __init__(self,size,cameraStartLoc):
         self.size = size
         self.objList = []
-        self.tempCameraLocContainer = (0,0)
+        self.cameraLocPre = cameraStartLoc.copy()
         self.activeSituation = True
         self.collisionObjGroup = pygame.sprite.Group()
         self.interactiveObjGroup = pygame.sprite.Group()
@@ -23,12 +23,12 @@ class Scence:
 
     
     def appendPlane(self,loc,size,vision,movingSpeed):
-        plane = Plane([loc[0],self.size[1] - loc[1] - size[1]],size,vision,movingSpeed)
+        plane = Plane([loc[0],loc[1] - size[1]],size,vision,movingSpeed)
         print("loc",plane.loc)
         self.objList.append(plane)
     
     def appendPerspective(self,loc,size,flag,vision,movingspeed):
-        Perspective = PerspectiveObject([loc[0],self.size[1] - loc[1] - size[1]],size,flag,vision,movingspeed)
+        Perspective = PerspectiveObject([loc[0],loc[1] - size[1]],size,flag,vision,movingspeed)
         self.objList.append(Perspective)
 
     def update_vision(self):
@@ -37,10 +37,11 @@ class Scence:
         
         #顺带一提，另一个原因是画面没更新完毕时就开始了新的绘制，这个问题可以简单的把两个任务强制拉到一个线程里进行来解决
         #但是我希望能找到一个优雅的方法处理它,2023.3.22
-        if self.tempCameraLocContainer != GE.camera.loc:
-            self.tempCameraLocContainer = tuple(GE.camera.loc)
+        if self.cameraLocPre != GE.camera.loc:
+            locLock = GE.camera.loc.copy()
             for obj in self.objList:
-                obj.update(self.tempCameraLocContainer)
+                obj.update(locLock,self.cameraLocPre)
+            self.cameraLocPre = locLock
         
     def update(self):
         for obj in self.objList:
@@ -59,7 +60,7 @@ class Plane:
         self.movingSpeed = movingSpeed
         """摄像机每移动x个像素，该物体移动x*movingSpeed个像素"""
 
-    def init(self,cameraLoc):
+    def init(self,cameraLoc,cameraLocPre):
         pass
 
     def draw(self):
@@ -67,8 +68,8 @@ class Plane:
         
     def animate(self):
         pass
-    def update(self,cameraLoc):
-        self.loc[0] = (cameraLoc[0]*(1-self.movingSpeed)) + self.org_loc[0]
+    def update(self,cameraLoc,cameraLocPre):
+        self.loc[0] += (cameraLoc[0]-cameraLocPre[0])*self.movingSpeed
 
 
 class PerspectiveObject:
@@ -100,20 +101,20 @@ class PerspectiveObject:
 
     def init(self,cameraLoc):
         pass
-    def initRightSide(self,cameraLoc):
+    def initRightSide(self,cameraLoc,cameraLocPre):
         if cameraLoc[0] < self.loc[0] - 640:
             self.vision = pygame.transform.scale(self.org_vision, (0,self.size[1]))
         elif cameraLoc[0] > self.loc[0] + self.size[0]:
             self.vision = self.org_vision
         else:
-            self.updateMethodForRight(cameraLoc)
-    def initLeftSide(self,cameraLoc):
+            self.updateMethodForRight(cameraLoc,cameraLocPre)
+    def initLeftSide(self,cameraLoc,cameraLocPre):
         if cameraLoc[0] < self.loc[0] - self.mut_1:
             self.vision = self.org_vision 
         elif cameraLoc[0] > self.loc[0] - 640:
             self.vision = pygame.transform.scale(self.org_vision, (0,self.size[1]))
         else:
-            self.updateMethodForLeft(cameraLoc)
+            self.updateMethodForLeft(cameraLoc,cameraLocPre)
     
     
     def draw(self):
@@ -123,10 +124,10 @@ class PerspectiveObject:
         pass
     
     
-    def update(self,cameraLoc):
+    def update(self,cameraLoc,cameraLocPre):
         pass
     
-    def updateMethodForRight(self,cameraLoc):
+    def updateMethodForRight(self,cameraLoc,cameraLocPre):
         #引入一个depth的概念，意义为这个片面垂直于镜头，它最远点到摄像机平面的距离
         #depth实际上与图片宽度无关，图片宽度是假设当片面刚好消失在镜头里时，片面通过透视投影到摄像机平面的宽度
         #当摄像机的焦距等于摄像机屏幕宽度一半时，图片的宽度在数值上等于这个depth
@@ -134,7 +135,7 @@ class PerspectiveObject:
         #当摄像机位置减去物体位置大于等于depth（图片宽度）时，图像不需要拉伸，缩放比为100%
         #当摄像机位置减去物体位置小于等于摄像机宽度一半的负数，也就是平面中心正好怼在物体位置上时，片面就看不见了，所以缩放比为0%
         #故缩放比为摄像机位置减去物体位置的数值结果在depth到摄像机宽度一半的负数之间的差值
-        self.loc[0] = cameraLoc[0]*(1-self.movingSpeed) + self.org_loc[0]
+        self.loc[0] = (cameraLoc[0]-cameraLocPre[0])*self.movingSpeed
         if cameraLoc[0] < self.loc[0] - 640 or cameraLoc[0] > self.loc[0] + self.size[0]:
             #这里的640指的是摄像机尺寸的一半
             #若摄像机位置在上述条件之内时，物体不可能出现在场景中，所以不用更新它
@@ -143,8 +144,8 @@ class PerspectiveObject:
         self.vision = pygame.transform.scale(self.org_vision, (self.size[0]*self.scaleIndex,self.size[1]))
         
 
-    def updateMethodForLeft(self,cameraLoc):
-        self.loc[0] = cameraLoc[0]*(1-self.movingSpeed) + self.org_loc[0]
+    def updateMethodForLeft(self,cameraLoc,cameraLocPre):
+        self.loc[0] = (cameraLoc[0]-cameraLocPre[0])*self.movingSpeed
         if self.loc[0] - cameraLoc[0] > self.mut_1 or self.loc[0] - cameraLoc[0] < 640:
             return
         self.scaleIndex=(self.loc[0] - cameraLoc[0] - 640)/self.mut_0

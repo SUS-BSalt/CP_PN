@@ -32,9 +32,9 @@ class Manager_Level_0:
         GE.controller = self.AVGModule.controller
         self.controller = self.AVGModule.controller
 
-        self.scence =GE.scence = tools.load_scence("data/levels/scence/s-0-0.json","level_0",[2650,1440])#createFirstScence()
         GE.camera.loc = [-640,0]
-        self.scence_1 = createSecondScence()
+        self.scence =GE.scence = tools.load_scence("data/levels/scence/s-0-0.json","level_0",[2650,1440])#createFirstScence()
+
         #self.scence = GE.scence
         
         self.ACTModule = createACTModule()
@@ -170,10 +170,6 @@ def createFirstScence():
     scence.appendCollisionObj(-350,0,100,2000)
     scence.appendCollisionObj(1750,0,100,2000)
     return scence
-
-def createSecondScence():
-    scence = Scence.Scence([3000,420])
-    scence.appendPlane([0,0],(1280,720),tools.getImage("Scence","level_0","backGround_0.png"),0)
 
 def createSecondScence_0():
     scence = Scence.Scence([3000,420])

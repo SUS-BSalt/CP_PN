@@ -87,8 +87,9 @@ class AVGModule:
                         GE.controller = GE.escMenu.controller
                         GE.manager = GE.escMenu
                         #print(GE.level_manager.moduleList)
-                        print(GE.camera.loc)
-                        print(GE.scence.objList[0])
+                        print("camera.loc",GE.camera.loc)
+                        for obj in GE.scence.objList:
+                            print(obj.loc)
 
 
 

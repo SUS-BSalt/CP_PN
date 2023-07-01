@@ -7,7 +7,6 @@ from data.main_game import MainGame
 
 cp_pN = MainGame()
 from data.levels import opening_menu
-
 cp_pN.runningStart()
 PG.quit()
 sys.exit()

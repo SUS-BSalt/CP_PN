@@ -337,22 +337,25 @@ class Attack_0:
     def __init__(self, master):
         self.master = master
 
-        self.picSize = (348,200)
-        self.picLoc = (0,0)
-    
+        self.currentFrame = 0
+        self.currentSFXFrame = 0
+
+        self.coerciveActingFrame = 25
+        self.load_constant()
+
+    def load_constant(self):
         self.frames = tools.getFrames("Character","Nacy","act_Attack")[0:3]
         self.sfxs = ("Hu",)
+        self.picSize = (348,200)
+        self.picLoc = (0,0)
 
         self.frame_list = (0,1,2)
         self.gfx_time_stamp = (10,20,40)
         self.pic_loc_rectify = (125,122,122)
         self.moving_steps = (40,55,0)
-        self.rect = ((30,147,40,100),(25,144,35,90),(25,144,35,90))
+        self.rects = ((30,147,40,100),(25,144,35,90),(25,144,35,90))
         self.sfx_list = (0,)
         self.sfx_time_stamp = (20,100)
-
-        self.currentFrame = 0
-        self.currentSFXFrame = 0
 
     def locatedPicLoc(self,rectify):
         self.picLoc = (self.master.loc[0] - rectify , self.master.loc[1] - 200)
@@ -377,13 +380,12 @@ class Attack_0:
         self.master.changePosition(self.moving_steps[0],0)
         self.locatedPicLoc(self.pic_loc_rectify[0])
 
-
     def resetAction(self):
         if "atk" in self.master.inputList:
             self.master.Attack_1.beg_execute()
-        elif pygame.key.get_pressed(setting.right):
+        elif self.master.rightMoveSymbol:
             self.master.walking.beg_execute()
-        elif pygame.key.get_pressed(setting.left):
+        elif self.master.leftMoveSymbol:
             self.master.walkingToLeft.beg_execute()
         elif self.master.timer >= self.gfx_time_stamp[-1]:
             if self.master.faceSide == "r":
@@ -413,6 +415,95 @@ class Attack_0:
         if self.master.timer >= self.sfx_time_stamp[self.currentSFXFrame]:
             GE.SFX[self.sfxs[self.sfx_list[self.currentSFXFrame]]].play()
             self.currentSFXFrame += 1
+
+class Attack_1(Attack_0):
+    def __init__(self,master):
+        self.master = master
+
+        self.currentFrame = 0
+        self.currentSFXFrame = 0
+
+        self.coerciveActingFrame = 25
+        self.load_constant()
+    
+    def load_constant(self):
+        self.frames = tools.getFrames("Character","Nacy","act_Attack")[3:6]
+        self.sfxs = ("Hu",)
+        self.picSize = (348,200)
+        self.picLoc = (0,0)
+    
+        self.frame_list = (0,1,2)
+        self.gfx_time_stamp = (10,20,40)
+        self.pic_loc_rectify = (47,120,120)        
+        self.moving_steps = (68,113,0)
+        self.rects = ((15,167,30,110),(40,120,45,70),(40,120,45,70))
+        self.sfx_list = (0,)
+        self.sfx_time_stamp = (20,100)
+
+    def resetAction(self):
+        if "atk" in self.master.inputList:
+            self.master.Attack_2.beg_execute()
+        elif self.master.rightMoveSymbol:
+            self.master.walking.beg_execute()
+        elif self.master.leftMoveSymbol:
+            self.master.walkingToLeft.beg_execute()
+        elif self.master.timer >= self.gfx_time_stamp[-1]:
+            if self.master.faceSide == "r":
+                self.master.standing.beg_execute()
+            else:
+                self.master.standingToLeft.beg_execute()
+
+    def changeFaceSides(self):
+        self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
+
+        self.moving_steps = (-68,-113,0)
+        self.pic_loc_rectify = (25,52,30)
+        self.rect = ((27,167,30,110),(5,120,45,70),(5,120,45,70))
+
+class Attack_2(Attack_0):
+    def __init__(self,master):
+        self.master = master
+
+        self.currentFrame = 0
+        self.currentSFXFrame = 0
+
+        self.coerciveActingFrame = 25
+        self.load_constant()
+    
+    def load_constant(self):
+        self.frames = tools.getFrames("Character","Nacy","act_Attack")[6:10]
+        self.sfxs = ("Hu",)
+        self.picSize = (348,200)
+        self.picLoc = (0,0)
+    
+        self.frame_list = (0,1,2,3)
+        self.gfx_time_stamp = (9,11,20,40)
+        self.pic_loc_rectify = (73,45,60,60)
+        self.moving_steps = (20,10,35,0)
+        self.rects = ((53,73,60,97),(38,37,15,50),(43,39,20,40),(43,39,20,40))
+        self.sfx_list = (0,)
+        self.sfx_time_stamp = (20,100)
+
+    def resetAction(self):
+        if "atk" in self.master.inputList:
+            self.master.Attack_0.beg_execute()
+        elif self.master.rightMoveSymbol:
+            self.master.walking.beg_execute()
+        elif self.master.leftMoveSymbol:
+            self.master.walkingToLeft.beg_execute()
+        elif self.master.timer >= self.gfx_time_stamp[-1]:
+            if self.master.faceSide == "r":
+                self.master.standing.beg_execute()
+            else:
+                self.master.standingToLeft.beg_execute()
+
+    def changeFaceSides(self):
+        self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
+
+        self.moving_steps = (-20,-10,-35,0)
+        self.pic_loc_rectify = (64,58,43,43)
+        self.rect = ((23,73,60,97),(151,37,15,50),(141,39,20,40),(141,39,20,40))
+
 
 class Walking:
     def __init__(self, master):

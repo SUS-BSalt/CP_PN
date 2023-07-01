@@ -14,6 +14,7 @@ skip = 'left ctrl'; autoPlay = "a"
 left = "a"; right = "d"; shift = "shift"; interact = "e"
 
 
+
 printSpeed = 0.1
 
 textLineGap = 18

@@ -2,12 +2,12 @@ import pygame
 from data import global_environment as GE,tools
 class Operation_instructions(pygame.sprite.Sprite):
     """操作教程，提示操作方法的图标，玩家离开提示位置后自动消失"""
-    def __init__(self, rect):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.pic_0 = tools.getImage("UI","A.png")
         self.pic_1 = tools.getImage("UI","D.png")
-        self.rect = pygame.Rect(rect)
-        self.activeSituation = False
+        self.rect = pygame.Rect((-160,500,320,1280))
+        self.activeSituation = True
         self.dyingSym = False
         self.timer = 100
     
@@ -22,8 +22,8 @@ class Operation_instructions(pygame.sprite.Sprite):
             pass
         else:
             self.dyingSym = True
-        GE.camera.draw(self.pic_0,(265,720))
-        GE.camera.draw(self.pic_1,(940,720))
+        GE.camera.draw(self.pic_0,(-375,720))
+        GE.camera.draw(self.pic_1,(300,720))
     def exec(self):
         pass
 
@@ -42,7 +42,7 @@ class NPC_noMod(pygame.sprite.Sprite):
         pass
 
 class handle_man_choice(pygame.sprite.Sprite):
-    def __init__(self, rect):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.pic_0 = tools.getImage("Scence","level_0","The-Handed-Man.png")
         self.pic_1 = tools.getImage("UI","E.png")
@@ -56,8 +56,8 @@ class handle_man_choice(pygame.sprite.Sprite):
         self.speakSymbol = False
         self.printingSymbol = False
         
-        self.rect = pygame.Rect(rect)
-        self.draw_loc_0 = (1700,552)
+        self.rect = pygame.Rect((1000,500,200,600))
+        self.draw_loc_0 = (1100,552)
         self.draw_loc_1 = (615,648)
         self.activeSituation = False
         self.dyingSym = False

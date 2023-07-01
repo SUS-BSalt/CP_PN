@@ -199,8 +199,8 @@ def createACTModule():
     module_ACT.setPlayer([0,922])
     module_ACT.setBottomUI([0,-1000], [640,720], "data/levels/books/level_0_0.txt")
 
-    module_ACT.interactive_obj_list.add(ACT_NPC.Operation_instructions((500,500,320,1280)))
-    module_ACT.interactive_obj_list.add(ACT_NPC.handle_man_choice((1650,500,200,600)))
+    module_ACT.interactive_obj_list.add(ACT_NPC.Operation_instructions())
+    module_ACT.interactive_obj_list.add(ACT_NPC.handle_man_choice())
     return module_ACT
 
 

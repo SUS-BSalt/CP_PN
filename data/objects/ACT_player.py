@@ -43,8 +43,14 @@ class Player(pygame.sprite.Sprite):
         self.walking = Walking(self)
         self.walkingToLeft = Walking(self).changeFaceSides()
 
-        self.normalAttack = NormalAttack(self)
-        self.normalAttackToLeft = NormalAttack(self).changeFaceSides()
+        self.attack_0 = Attack_0(self)
+        self.attack_0_left = Attack_0(self).changeFaceSides()
+
+        self.attack_1 = Attack_1(self)
+        self.attack_1_left = Attack_1(self).changeFaceSides()
+
+        self.attack_2 = Attack_2(self)
+        self.attack_2_left = Attack_2(self).changeFaceSides()
 
 
         
@@ -131,6 +137,7 @@ class Player(pygame.sprite.Sprite):
 
             #如果输入列表不为空，执行输入信号，归零计时器，重置动作
         GE.camera.draw(self.currentAction.vision,self.currentAction.picLoc)
+        GE.camera.draw(GE.camera.redPoint,(self.loc[0],self.currentAction.picLoc[1]))
 
     def draw(self):
         GE.camera.draw(self.currentAction.vision,self.currentAction.picLoc)
@@ -185,10 +192,10 @@ class Player(pygame.sprite.Sprite):
             #攻击
             if self.faceSide == "r":
                 #向右攻击
-                self.normalAttack.beg_execute()
+                self.attack_0.beg_execute()
             else:
                 #向左攻击
-                self.normalAttackToLeft.beg_execute()
+                self.attack_0_left.beg_execute()
 
         elif "def" in self.inputList:
                     #好防御
@@ -352,7 +359,7 @@ class Attack_0:
         self.frame_list = (0,1,2)
         self.gfx_time_stamp = (10,20,40)
         self.pic_loc_rectify = (125,122,122)
-        self.moving_steps = (40,55,0)
+        self.moving_steps = (40,55,0,0)
         self.rects = ((30,147,40,100),(25,144,35,90),(25,144,35,90))
         self.sfx_list = (0,)
         self.sfx_time_stamp = (20,100)
@@ -363,14 +370,17 @@ class Attack_0:
     def changeFaceSides(self):
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
-        self.moving_steps = (-40,-55,0)
+        self.moving_steps = (-40,-55,0,0)
         self.pic_loc_rectify = (9,76,76)
         self.rect = ((10,147,40,100),(10,144,35,90),(10,144,35,90))
+
+        return self
 
     def beg_execute(self):
         self.master.coerciveActingSymbol = True
         self.master.currentAction = self
         self.master.timer = 0
+        self.master.inputList.clear()
 
         self.currentFrame = 0
         self.currentSFXFrame = 0
@@ -382,16 +392,25 @@ class Attack_0:
 
     def resetAction(self):
         if "atk" in self.master.inputList:
-            self.master.Attack_1.beg_execute()
+            if  self.master.faceSide == "r":
+                self.master.attack_1.beg_execute()
+            else:
+                self.master.attack_1_left.beg_execute()
         elif self.master.rightMoveSymbol:
             self.master.walking.beg_execute()
         elif self.master.leftMoveSymbol:
             self.master.walkingToLeft.beg_execute()
         elif self.master.timer >= self.gfx_time_stamp[-1]:
+            #如果状态自然结束，那么先修改角色位置，再将状态转换到站立
+            self.master.changePosition(self.moving_steps[-1],0)
             if self.master.faceSide == "r":
                 self.master.standing.beg_execute()
             else:
                 self.master.standingToLeft.beg_execute()
+        else:
+            return False
+
+        return True
 
     def update(self):
         self.master.timer += 1
@@ -403,7 +422,9 @@ class Attack_0:
 
         #当不在硬直时，判定是否需要更改玩家状态
         if self.master.coerciveActingSymbol == False:
-            self.resetAction()
+            if self.resetAction():
+                return 0
+
 
         if self.master.timer >= self.gfx_time_stamp[self.currentFrame]:
             self.currentFrame += 1
@@ -435,30 +456,42 @@ class Attack_1(Attack_0):
         self.frame_list = (0,1,2)
         self.gfx_time_stamp = (10,20,40)
         self.pic_loc_rectify = (47,120,120)        
-        self.moving_steps = (68,113,0)
+        self.moving_steps = (68,113,0,0)
         self.rects = ((15,167,30,110),(40,120,45,70),(40,120,45,70))
         self.sfx_list = (0,)
         self.sfx_time_stamp = (20,100)
 
     def resetAction(self):
         if "atk" in self.master.inputList:
-            self.master.Attack_2.beg_execute()
+            if  self.master.faceSide == "r":
+                self.master.attack_2.beg_execute()
+            else:
+                self.master.attack_2_left.beg_execute()
         elif self.master.rightMoveSymbol:
             self.master.walking.beg_execute()
         elif self.master.leftMoveSymbol:
             self.master.walkingToLeft.beg_execute()
         elif self.master.timer >= self.gfx_time_stamp[-1]:
+            #如果状态自然结束，那么先修改角色位置，再将状态转换到站立
+            self.master.changePosition(self.moving_steps[-1],0)
             if self.master.faceSide == "r":
                 self.master.standing.beg_execute()
             else:
                 self.master.standingToLeft.beg_execute()
 
+        else:
+            return False
+        
+        return True
+
     def changeFaceSides(self):
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
-        self.moving_steps = (-68,-113,0)
+        self.moving_steps = (-68,-113,0,0)
         self.pic_loc_rectify = (25,52,30)
         self.rect = ((27,167,30,110),(5,120,45,70),(5,120,45,70))
+
+        return self
 
 class Attack_2(Attack_0):
     def __init__(self,master):
@@ -477,32 +510,42 @@ class Attack_2(Attack_0):
         self.picLoc = (0,0)
     
         self.frame_list = (0,1,2,3)
-        self.gfx_time_stamp = (9,11,20,40)
-        self.pic_loc_rectify = (73,45,60,60)
-        self.moving_steps = (20,10,35,0)
+        self.gfx_time_stamp = (8,12,20,40)
+        self.pic_loc_rectify = (74,90,120,120)
+        self.moving_steps = (35,15,45,0,50)
         self.rects = ((53,73,60,97),(38,37,15,50),(43,39,20,40),(43,39,20,40))
         self.sfx_list = (0,)
         self.sfx_time_stamp = (20,100)
 
     def resetAction(self):
         if "atk" in self.master.inputList:
-            self.master.Attack_0.beg_execute()
+            if  self.master.faceSide == "r":
+                self.master.attack_0.beg_execute()
+            else:
+                self.master.attack_0_left.beg_execute()
         elif self.master.rightMoveSymbol:
             self.master.walking.beg_execute()
         elif self.master.leftMoveSymbol:
             self.master.walkingToLeft.beg_execute()
         elif self.master.timer >= self.gfx_time_stamp[-1]:
+            self.master.changePosition(self.moving_steps[-1],0)
             if self.master.faceSide == "r":
                 self.master.standing.beg_execute()
             else:
                 self.master.standingToLeft.beg_execute()
+        else:
+            return False
+
+        return True                
 
     def changeFaceSides(self):
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
-        self.moving_steps = (-20,-10,-35,0)
-        self.pic_loc_rectify = (64,58,43,43)
+        self.moving_steps = (-35,-15,-45,0,-50)
+        self.pic_loc_rectify = (64,57,87,87)
         self.rect = ((23,73,60,97),(151,37,15,50),(141,39,20,40),(141,39,20,40))
+
+        return self
 
 
 class Walking:

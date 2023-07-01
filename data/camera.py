@@ -16,6 +16,8 @@ class Camera:
         self.white.fill((255,255,255))
         self.black = pygame.Surface(self.size)
         self.black.fill((0,0,0))
+        self.redPoint = pygame.Surface((5,5))
+        self.redPoint.fill((255,0,0))
 
 
         self.draw_List_Creating = []

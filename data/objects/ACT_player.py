@@ -53,7 +53,6 @@ class Player(pygame.sprite.Sprite):
         self.attack_2_left = Attack_2(self).changeFaceSides()
 
 
-        
     def init(self):
         self.inputList.clear()
         self.picLoc = (self.loc[0] - rectify , self.loc[1] - 200)
@@ -75,67 +74,52 @@ class Player(pygame.sprite.Sprite):
         self.loc[1] += y_var
 
     def cameraTracking(self):
-        gap = self.loc[0] - GE.camera.loc[0] - 640
-        if 1 < gap <= 10:
+        gap = (self.loc[0]*0.8 + GE.camera.mousePos[0]*0.2) - GE.camera.loc[0] - 640
+        GE.camera.updateCameraLoc((int(gap*0.1),0))
+        """if 1 < gap <= 10:
             GE.camera.updateCameraLoc((1,0))
         elif -10 < gap <= -1:
-            GE.camera.updateCameraLoc((-1,0))  
+            GE.camera.updateCameraLoc((-1,0))
         elif 10 < gap <= 120:
             GE.camera.updateCameraLoc((3,0))
         elif -120 < gap <= -10:
-            GE.camera.updateCameraLoc((-3,0))        
+            GE.camera.updateCameraLoc((-3,0))
         elif 120 < gap :
             GE.camera.updateCameraLoc((10,0))
         elif gap < -120:
-            GE.camera.updateCameraLoc((-10,0))
+            GE.camera.updateCameraLoc((-10,0))"""
 
     def faceSideCheck(self):
         if GE.camera.mousePos[0] >= self.loc[0]:
             if self.faceSide == "l":
-                self.loc[0] += 25
                 self.faceSide = "r"
                 return True
         else:
             if self.faceSide == "r":
-                self.loc[0] -= 25
                 self.faceSide = "l"
                 return True
         return False
 
+    def pushing_input(self,input):
+        #只认可最新输入的一个指令，因为我发觉这个游戏又不需要搓招
+        #虽然这个函数所做的事简直蠢上天了，但是为了方便理清逻辑还是可以保留。
+        #抱歉
+        self.inputList.clear()
+        self.inputList.append(input)
 
     def update(self):
-        #只认可最新输入的一个指令
+        
         #当其执行攻击或防御时，传递一个打击的事件，让上层的模组去读取。
         #print(self.loc,GE.camera.getMousePos())
+        GE.camera.getMousePos()
         self.cameraTracking()
+        self.faceSideCheck()
+        self.currentAction.update()
         if self.beHitSymbol == True:
             #被打中时
             pass
 
-        elif self.coerciveActingSymbol == True:
-            #如果在强制行动中，执行当前动作
-            self.currentAction.update()
-            pass
-
-        elif self.coerciveActingSymbol == False:
-            #当玩家不在强制行动中
-            self.currentAction.update()
-            #执行当前动作
-            
-            if self.inputList != []:
-                self.timer = 0
-                self.inputList = self.inputList[-1:]
-
-                self.actionDistributor()
-                #print(self.loc[0],GE.getMousePos()[0])
-                self.inputList.clear()
-            
-            GE.camera.getMousePos()
-            if self.faceSideCheck():
-                self.resetAction()
-                pass
-
-            #如果输入列表不为空，执行输入信号，归零计时器，重置动作
+        #如果输入列表不为空，执行输入信号，归零计时器，重置动作
         GE.camera.draw(self.currentAction.vision,self.currentAction.picLoc)
         GE.camera.draw(GE.camera.redPoint,(self.loc[0],self.currentAction.picLoc[1]))
 
@@ -145,200 +129,6 @@ class Player(pygame.sprite.Sprite):
         
     def animate(self):
         pass
-
-    def resetAction(self):
-        self.timer = 0
-        if self.defenceSymbol:
-            #进入防御
-            pass
-        elif self.rightMoveSymbol:
-            #向右走
-            if self.faceSide == "r":
-                #向右走，面向右
-                if self.shiftSymbol:
-                    #向右走，面向右，奔跑
-                    pass
-                else:
-                    #向右走，面向右，慢走
-                    self.walking.beg_execute()
-            else:
-                #向右走，面向左，后退
-                self.faceSide = "l"
-                pass
-        elif self.leftMoveSymbol:
-            #向左走
-            if self.faceSide == "r":
-                #向左走，面向右，后退
-                self.faceSide = "r"
-                pass
-            else:
-                #向左走，面向左
-                if self.shiftSymbol == True:
-                    #向左走，面向左，奔跑
-                    pass
-                else:
-                    #向左走，面向左，慢走
-                    self.walkingToLeft.beg_execute()
-
-        else:
-            #站立
-            if self.faceSide == "r":
-                self.standing.beg_execute()
-            else:
-                self.standingToLeft.beg_execute()
-
-    def actionDistributor(self):
-        if "atk" in self.inputList:
-            #攻击
-            if self.faceSide == "r":
-                #向右攻击
-                self.attack_0.beg_execute()
-            else:
-                #向左攻击
-                self.attack_0_left.beg_execute()
-
-        elif "def" in self.inputList:
-                    #好防御
-                    if self.faceSide == "r":
-                        #向右防御
-                        pass
-                    else:
-                        #向左防御
-                        pass
-
-        elif self.defenceSymbol:
-            #防御
-            if self.faceSide == "r":
-                #向右防御
-                pass
-            else:
-                 #向左防御
-                 pass
-                
-        elif "right" in self.inputList:
-            #向右走
-            if self.faceSide == "r":
-                #向右走，面向右
-                self.walking.beg_execute()
-            else:
-                #向右走，面向左，后退
-                pass
-
-        elif "left" in self.inputList:
-            #向左走
-            if self.faceSide == "r":
-                #向左走，面向右，后退
-                pass
-            else:
-                #向左走，鼠标在左
-                self.walkingToLeft.beg_execute()
-
-
-class NormalAttack:
-    def __init__(self, master):
-        self.master = master
-
-        self.picSize = (348,200)
-        self.picLoc = (0,0)
-        
-        self.frames = tools.getFrames("Character","Nacy","act_Attack")
-        self.sfxs = ("Hu",)
-
-        self.act0_frame_list = (0,1,2)
-        self.act0_gfx_time_stamp = (10,20,40)
-        self.act0_pic_loc_rectify = (125,122,122)                
-        self.act0_moving_steps = (40,55,0)
-        self.act0_rect = ((30,147,40,100),(25,144,35,90),(25,144,35,90))
-        self.act0_sfx_list = (0,)
-        self.act0_sfx_time_stamp = (20,100)
-
-        self.act1_frame_list = (3,4,5)
-        self.act1_gfx_time_stamp = (10,20,40)
-        self.act1_pic_loc_rectify = (47,120,120)        
-        self.act1_moving_steps = (68,113,0)
-        self.act1_rect = ((15,167,30,110),(40,120,45,70),(40,120,45,70))
-        self.act1_sfx_list = (0,)
-        self.act1_sfx_time_stamp = (20,100)
-
-        self.currentFrame = 0
-        self.currentSFXFrame = 0
-
-        self.frame_list = self.act0_frame_list
-        self.gfx_time_stamp = self.act0_gfx_time_stamp
-        self.pic_loc_rectify = self.act0_pic_loc_rectify
-        self.moving_steps = self.act0_moving_steps        
-        self.rects = self.act0_rect
-        self.sfx_list = self.act0_sfx_list
-        self.sfx_time_stamp = self.act0_sfx_time_stamp
-
-        self.vision = self.frames[self.frame_list[0]]
-
-        self.coerciveActingFrame = 25
-
-    def locatedPicLoc(self,rectify):
-        self.picLoc = (self.master.loc[0] - rectify , self.master.loc[1] - 200)
-
-    def init(self):
-        self.currentFrame = 0
-        self.currentSFXFrame = 0
-
-    def changeFaceSides(self):
-        self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
-
-        self.act0_moving_steps = (-40,-55,0)
-        self.act0_pic_loc_rectify = (9,76,76)
-        self.act0_rect = ((10,147,40,100),(10,144,35,90),(10,144,35,90))
-
-        self.act1_moving_steps = (-68,-113,0)
-        self.act1_pic_loc_rectify = (25,52,52)
-        self.act1_rect = ((15,167,30,110),(5,120,45,70),(5,120,45,70))
-        return self
-
-    def beg_execute(self):
-        self.master.coerciveActingSymbol = True
-        if self.master.currentAction == self:
-            self.frame_list = self.act1_frame_list
-            self.gfx_time_stamp = self.act1_gfx_time_stamp
-            self.pic_loc_rectify = self.act1_pic_loc_rectify
-            self.moving_steps = self.act1_moving_steps
-            self.sfx_list = self.act1_sfx_list
-            self.sfx_time_stamp = self.act1_sfx_time_stamp                        
-        else:
-            self.frame_list = self.act0_frame_list
-            self.gfx_time_stamp = self.act0_gfx_time_stamp
-            self.pic_loc_rectify = self.act0_pic_loc_rectify
-            self.moving_steps = self.act0_moving_steps
-            self.sfx_list = self.act0_sfx_list
-            self.sfx_time_stamp = self.act0_sfx_time_stamp
-
-        self.master.currentAction = self
-        self.vision = self.frames[self.frame_list[0]]
-        self.master.setRect(self.rects[0])
-        self.master.changePosition(self.moving_steps[0],0)
-        self.locatedPicLoc(self.pic_loc_rectify[0])
-        self.init()
-        
-    def update(self):
-        self.master.timer += 1
-
-        if self.master.coerciveActingSymbol \
-            and self.master.timer > self.coerciveActingFrame:
-            self.master.coerciveActingSymbol = False
-
-        if self.master.timer >= self.gfx_time_stamp[-1]:
-            self.master.resetAction()
-            self.init()
-
-        elif self.master.timer >= self.gfx_time_stamp[self.currentFrame]:
-            self.currentFrame += 1
-            self.master.setRect(self.rects[self.currentFrame])
-            self.master.changePosition(self.moving_steps[self.currentFrame],0)
-            self.locatedPicLoc(self.pic_loc_rectify[self.currentFrame])
-            self.vision = self.frames[self.frame_list[self.currentFrame]]
-
-        if self.master.timer >= self.sfx_time_stamp[self.currentSFXFrame]:
-            GE.SFX[self.sfxs[self.sfx_list[self.currentSFXFrame]]].play()
-            self.currentSFXFrame += 1
 
 class Attack_0:
     def __init__(self, master):
@@ -372,7 +162,7 @@ class Attack_0:
 
         self.moving_steps = (-40,-55,0,0)
         self.pic_loc_rectify = (9,76,76)
-        self.rect = ((10,147,40,100),(10,144,35,90),(10,144,35,90))
+        self.rects = ((10,147,40,100),(10,144,35,90),(10,144,35,90))
 
         return self
 
@@ -564,7 +354,6 @@ class Walking:
         self.act0_moving_steps = (30,30,30,30)
         self.act0_pic_loc_rectify = (42,37,45,42)
         self.act0_rect = ((20,170,30,100),(20,170,30,100),(20,170,30,100),(20,170,30,100))
-        self.cameraMovingSpeed = 3
 
         self.currentFrame = 0
 
@@ -586,6 +375,48 @@ class Walking:
         self.currentFrame = 0
         pass
 
+    def resetAction(self):
+        if self.master.inputList:
+            if "atk" in self.master.inputList:
+                if  self.master.faceSide == "r":
+                    self.master.attack_0.beg_execute()
+                else:
+                    self.master.attack_0_left.beg_execute()
+
+        elif self.master.rightMoveSymbol and self.master.leftMoveSymbol:
+            if self.master.faceSide == "r":
+                self.master.standing.beg_execute()
+            else:
+                self.master.standingToLeft.beg_execute()
+
+        elif self.master.rightMoveSymbol:
+            if self.master.faceSide == "r":#向右前进
+                if self.master.currentAction != self.master.walking:
+
+                    self.master.walking.beg_execute()
+                else:
+                    return False
+                
+            """else:#向右后退
+                if self.master.currentAction != self.master.retreat:
+                    pass"""
+        elif self.master.leftMoveSymbol:
+            if self.master.faceSide == "l":#向左前进
+                if self.master.currentAction != self.master.walkingToLeft:
+                    self.master.walkingToLeft.beg_execute()
+                else:
+                    return False
+            """else:#向左后退
+                if self.master.currentAction != self.master.retreatToLeft:
+                    pass"""
+        
+        elif self.master.faceSide == "r":
+            self.master.standing.beg_execute()
+        elif self.master.faceSide == "l":
+            self.master.standingToLeft.beg_execute()
+
+        return True
+
     def changeFaceSides(self) -> "Walking":
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
@@ -601,6 +432,8 @@ class Walking:
         return self
     
     def beg_execute(self):
+        self.master.timer = 0
+        self.master.inputList.clear()
         self.master.currentAction = self
         self.vision = self.frames[self.frame_list[0]]
         self.master.setRect(self.rects[0])
@@ -609,19 +442,17 @@ class Walking:
         self.init()
 
     def update(self):
-        if not self.master.rightMoveSymbol and\
-           not self.master.leftMoveSymbol:
-            self.master.resetAction()
-            return 0 
-        
+        if self.resetAction():
+            return 0
+
         self.master.timer += 1
         
         if self.master.timer >= self.gfx_time_stamp[-1]:
             self.master.timer = 0
             self.currentFrame = 0
             self.vision = self.frames[self.frame_list[0]]
-            self.master.setRect(self.rects[0])
             self.master.changePosition(self.moving_steps[0],0)
+            self.master.setRect(self.rects[0])
             self.locatedPicLoc(self.pic_loc_rectify[0])
             
         elif self.master.timer >= self.gfx_time_stamp[self.currentFrame]:
@@ -638,54 +469,103 @@ class Standing:
     def __init__(self, master):
         self.master = master
 
-        self.picSize = (70,200)
-        self.picLoc = (0,0)
-        self.pic_loc_rectify = (64,200)
-        
-        self.frames = tools.getFrames("Character","Nacy","act_Standing")
-
-        self.act0_frame_list = [0,1]
-        self.act0_gfx_time_stamp = [70,140]
-        self.act0_pic_loc_rectify = (64,200)
-
         self.currentFrame = 0
-
-        self.frame_list = self.act0_frame_list
-        self.gfx_time_stamp = self.act0_gfx_time_stamp
-        self.moving_steps = [0]
-
-        self.vision = self.frames[self.frame_list[0]]
 
         self.coerciveActingFrame = 0
-
-    def locatedPicLoc(self,rectify):
-        self.picLoc = (self.master.loc[0] - rectify[0] , self.master.loc[1] - rectify[1])
-
-    def init(self):
-        self.vision = self.frames[self.frame_list[0]]
-        self.currentFrame = 0
-        pass
+        self.load_constant()
 
     def changeFaceSides(self):
         self.frames = [pygame.transform.flip(image,True,False) for image in self.frames]
 
-        self.act0_pic_loc_rectify = (self.picSize[0] - self.act0_pic_loc_rectify[0],self.act0_pic_loc_rectify[1])
-        self.pic_loc_rectify = self.act0_pic_loc_rectify
+        self.pic_loc_rectify = (32,)
+        self.rects = ((16,28,40,120),)
         return self
+
+    def load_constant(self):
+        self.frames = tools.getFrames("Character","Nacy","act_Standing")
+        self.sfxs = ()
+        self.picSize = (70,200)
+        self.picLoc = (0,0)
         
+        self.frame_list = (0,1)
+        self.gfx_time_stamp = (70,140)
+        self.pic_loc_rectify = (38,)
+        self.moving_steps = (0,)
+        self.rects = ((14,28,40,120),)
+        self.sfx_list = ()
+        self.sfx_time_stamp = ()
+
+    def locatedPicLoc(self,rectify):
+        self.picLoc = (self.master.loc[0] - rectify , self.master.loc[1] - 200)
+       
     def beg_execute(self):
         self.master.currentAction = self
-        self.locatedPicLoc(self.pic_loc_rectify)
-        #self.master.setRect(self.picLoc[0],self.picLoc[1],self.picSize[0],self.picSize[1])
+        self.master.timer = 0
+        self.master.inputList.clear()
+
+        self.currentFrame = 0
+        self.currentSFXFrame = 0
+
+        self.vision = self.frames[self.frame_list[0]]
+        self.master.setRect(self.rects[0])
+        self.locatedPicLoc(self.pic_loc_rectify[0])
         
-        self.init()
+        #self.master.setRect(self.picLoc[0],self.picLoc[1],self.picSize[0],self.picSize[1])
+
+    def resetAction(self):
+        if self.master.inputList:
+            if "atk" in self.master.inputList:
+                if  self.master.faceSide == "r":
+                    self.master.attack_0.beg_execute()
+                else:
+                    self.master.attack_0_left.beg_execute()
+
+        elif self.master.rightMoveSymbol == self.master.leftMoveSymbol:
+            #如果左与右都被按下或者都被放开，执行站立姿势，按鼠标分配左右
+            if self.master.currentAction != self.master.standing \
+            and self.master.faceSide == "r":
+                self.master.standing.beg_execute()
+            elif self.master.currentAction == self.master.standing \
+            and self.master.faceSide == "l":
+                self.master.standingToLeft.beg_execute()
+
+        elif self.master.rightMoveSymbol:
+            if self.master.faceSide == "r":#向右前进
+                if self.master.currentAction != self.master.walking:
+
+                    self.master.walking.beg_execute()
+                else:
+                    return False
+                
+            """else:#向右后退
+                if self.master.currentAction != self.master.retreat:
+                    pass"""
+        
+        elif self.master.leftMoveSymbol:
+            if self.master.faceSide == "l":#向左前进
+                if self.master.currentAction != self.master.walkingToLeft:
+                    self.master.walkingToLeft.beg_execute()
+                else:
+                    return False
+            """else:#向左后退
+                if self.master.currentAction != self.master.retreatToLeft:
+                    pass"""
+
+        else:
+            return False
+
+        return True
 
     def update(self):
         self.master.timer += 1
+        if self.resetAction():
+            return 0
 
-        if self.master.timer >= self.gfx_time_stamp[-1]:
+        elif self.master.timer >= self.gfx_time_stamp[-1]:
             self.master.timer = 0
-            self.init()
+            self.currentFrame = 0
+            self.vision = self.frames[self.frame_list[self.currentFrame]]
+
         elif self.master.timer >= self.gfx_time_stamp[self.currentFrame]:
             self.currentFrame += 1
             self.vision = self.frames[self.frame_list[self.currentFrame]]

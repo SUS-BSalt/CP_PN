@@ -23,11 +23,9 @@ class ACTModule:
                 match pygame.key.name(event.key):
                     case setting.left:
                         self.player.leftMoveSymbol = True
-                        self.player.inputList.append("left")
                         
                     case setting.right:
                         self.player.rightMoveSymbol = True
-                        self.player.inputList.append("right")
                     
                     case setting.shift:
                         self.player.shiftSymbol = True
@@ -52,6 +50,7 @@ class ACTModule:
                         print("playRect",self.player.rect)
                         print("cameraLoc",GE.camera.loc)
                         print("mousePos",GE.camera.mousePos)
+                        print("currentAction",self.player.currentAction)
                         
                         #print("word_0",self.bottomUI.wordsList[0].colorGradientSym)
                         #print("word_float",len(self.bottomUI.floatingWordsList))
@@ -60,10 +59,10 @@ class ACTModule:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 match event.button:
                     case 1 :
-                        self.player.inputList.append("atk")
+                        self.player.pushing_input("atk")
                     case 3:
                         self.player.defenceSymbol = True
-                        self.player.inputList.append("def")
+                        self.player.pushing_input("def")
             elif event.type == pygame.MOUSEBUTTONUP:
                 match event.button:
                     case 3:
